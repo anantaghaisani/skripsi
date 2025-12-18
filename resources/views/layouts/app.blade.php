@@ -3,9 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'Tryout App')</title>
+    <title>@yield('title', 'Hakuna Matata Course')</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'hm-blue': '#184E83',
+                        'hm-yellow': '#FFC107',
+                    }
+                }
+            }
+        }
+    </script>
     <style>
         body {
             font-family: 'Inter', sans-serif;
@@ -13,68 +25,107 @@
     </style>
 </head>
 <body class="bg-gray-50">
-    <!-- Navbar -->
-    <nav class="bg-white shadow-sm border-b border-gray-200">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-16">
-                <!-- Logo -->
-                <div class="flex items-center">
-                    <div class="flex items-center space-x-2">
-                        <div class="bg-yellow-400 rounded-lg p-2">
-                            <svg class="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
-                            </svg>
-                        </div>
-                        <span class="text-2xl font-bold text-gray-900">HM</span>
-                    </div>
-                </div>
-
-                <!-- Navigation Menu -->
-                <div class="hidden md:flex space-x-8">
-                    <a href="{{ route('tryout.index') }}" class="text-gray-700 hover:text-gray-900 px-3 py-2 text-sm font-medium border-b-2 {{ Request::is('tryout*') ? 'border-blue-500 text-blue-600' : 'border-transparent' }}">
-                        Tryout
-                    </a>
-                    <a href="#" class="text-gray-700 hover:text-gray-900 px-3 py-2 text-sm font-medium border-b-2 border-transparent">
-                        Modul Pembelajaran
-                    </a>
-                    <a href="#" class="text-gray-700 hover:text-gray-900 px-3 py-2 text-sm font-medium border-b-2 border-transparent">
-                        Profile
-                    </a>
-                </div>
-
-                <!-- User Profile -->
-                <div class="flex items-center space-x-4">
-                    <button class="text-gray-400 hover:text-gray-600">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
-                        </svg>
-                    </button>
-                    <div class="flex items-center space-x-2">
-                        <img src="https://ui-avatars.com/api/?name={{ Auth::user()->name ?? 'User' }}&background=random" alt="Profile" class="w-8 h-8 rounded-full">
-                        <div class="text-sm">
-                            <p class="font-medium text-gray-900">{{ Auth::user()->name ?? 'Hakuna' }}</p>
-                            <p class="text-xs text-gray-500">{{ Auth::user()->email ?? 'user@gmail.com' }}</p>
-                        </div>
-                    </div>
-                    <form method="POST" action="{{ route('logout') }}" class="inline">
-                        @csrf
-                        <button type="submit" class="text-red-500 hover:text-red-700">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
-                            </svg>
-                        </button>
-                    </form>
-                </div>
+    <div class="flex h-screen overflow-hidden">
+        <!-- Sidebar -->
+        <aside class="w-56 bg-white shadow-lg flex flex-col">
+            <!-- Logo -->
+            <div class="p-6 border-b flex justify-center">
+                <img src="{{ asset('images/logo_hmc.png') }}" alt="HM Logo" class="h-12 mt-2">
             </div>
+
+            <!-- Menu Navigation -->
+            <nav class="flex-1 px-4 py-6 space-y-2">
+                <!-- Dashboard -->
+                <a href="{{ route('dashboard') }}" 
+                   class="flex items-center space-x-3 px-4 py-3 rounded-lg 
+                   {{ Request::is('dashboard*') ? 'bg-hm-blue text-white' : 'text-gray-400 hover:bg-gray-50' }} transition">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+                    </svg>
+                    <span class="font-medium">Dashboard</span>
+                </a>
+
+                <!-- Tryout -->
+                <a href="{{ route('tryout.index') }}" 
+                   class="flex items-center space-x-3 px-4 py-3 rounded-lg 
+                   {{ Request::is('tryout*') ? 'bg-hm-blue text-white' : 'text-gray-400 hover:bg-gray-50' }} transition">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                    <span class="font-medium">Tryout</span>
+                </a>
+
+                <!-- Modul Pembelajaran -->
+                <a href="{{ route('modules.index') }}" 
+                   class="flex items-center space-x-3 px-4 py-3 rounded-lg 
+                   {{ Request::is('modules*') ? 'bg-hm-blue text-white' : 'text-gray-400 hover:bg-gray-50' }} transition">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                    </svg>
+                    <span class="font-medium">Modul Pembelajaran</span>
+                </a>
+
+                <!-- Profile -->
+                <a href="#" 
+                   class="flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-400 hover:bg-gray-50 transition">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                    </svg>
+                    <span class="font-medium">Profile</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content Area -->
+        <div class="flex-1 flex flex-col overflow-hidden">
+            <!-- Top Bar -->
+            <header class="px-8 py-4 bg-transparent transition-all duration-300">
+                <div class="flex items-center justify-between">
+                    <!-- Page Title -->
+                    <h1 class="text-3xl font-bold text-hm-blue">
+                        @yield('page-title', 'Dashboard')
+                    </h1>
+
+                    <!-- User Profile Section -->
+                    <div class="flex items-center space-x-4">
+                        <!-- User Info -->
+                        <div class="flex items-center space-x-3 px-4 py-2 bg-white rounded-full shadow-sm">
+                            <img src="https://ui-avatars.com/api/?name={{ Auth::user()->name }}&background=184E83&color=fff" 
+                                 alt="Profile" 
+                                 class="w-10 h-10 rounded-full">
+                            <div class="leading-tight">
+                                <p class="text-sm font-semibold text-gray-900">
+                                    {{ Auth::user()->name }}
+                                </p>
+                                <p class="text-xs text-gray-500">
+                                    {{ Auth::user()->email }}
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Logout Button -->
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <button type="submit"
+                                    class="p-3 bg-white rounded-full shadow-sm text-gray-400 hover:text-red-600 transition"
+                                    title="Logout">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                          d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+                                </svg>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Content -->
+            <main class="flex-1 overflow-y-auto bg-gray-50">
+                @yield('content')
+            </main>
         </div>
-    </nav>
+    </div>
 
-    <!-- Content -->
-    <main>
-        @yield('content')
-    </main>
-
-    <!-- Scripts -->
     @stack('scripts')
 </body>
 </html>

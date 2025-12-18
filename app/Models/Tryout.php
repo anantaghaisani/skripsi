@@ -32,4 +32,8 @@ class Tryout extends Model
                     ->withPivot('status', 'score', 'started_at', 'finished_at')
                     ->withTimestamps();
     }
+    public function scopeActive($query)
+    {
+        return $query->where('is_active', true);
+    }
 }

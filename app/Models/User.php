@@ -15,6 +15,8 @@ class User extends Authenticatable
         'email',
         'password',
         'photo',
+        'grade_level', // TAMBAH
+        'class_number', // TAMBAH
     ];
 
     protected $hidden = [

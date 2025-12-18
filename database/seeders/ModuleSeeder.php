@@ -1,0 +1,178 @@
+<?php
+
+namespace Database\Seeders;
+
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
+
+class ModuleSeeder extends Seeder
+{
+    public function run(): void
+    {
+        $modules = [
+            // Modul SD
+            [
+                'title' => 'Matematika Dasar - Penjumlahan dan Pengurangan',
+                'description' => 'Modul pembelajaran matematika dasar untuk kelas 1 SD. Membahas konsep penjumlahan dan pengurangan dengan cara yang menyenangkan.',
+                'cover_image' => 'modules/covers/matematika-sd-1.jpg',
+                'pdf_file' => 'modules/pdfs/matematika-sd-1-penjumlahan.pdf',
+                'grade_level' => 'SD',
+                'subject' => 'Matematika',
+                'class_number' => 1,
+                'views' => 125,
+                'is_active' => true,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'title' => 'Bahasa Indonesia - Membaca dan Menulis',
+                'description' => 'Belajar membaca dan menulis huruf kapital dan huruf kecil dengan mudah.',
+                'cover_image' => 'modules/covers/bahasa-sd-1.jpg',
+                'pdf_file' => 'modules/pdfs/bahasa-indonesia-sd-1.pdf',
+                'grade_level' => 'SD',
+                'subject' => 'Bahasa Indonesia',
+                'class_number' => 1,
+                'views' => 98,
+                'is_active' => true,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'title' => 'IPA - Mengenal Tumbuhan',
+                'description' => 'Modul pengenalan tumbuhan dan bagian-bagiannya untuk kelas 3 SD.',
+                'cover_image' => 'modules/covers/ipa-sd-3.jpg',
+                'pdf_file' => 'modules/pdfs/ipa-sd-3-tumbuhan.pdf',
+                'grade_level' => 'SD',
+                'subject' => 'IPA',
+                'class_number' => 3,
+                'views' => 87,
+                'is_active' => true,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+
+            // Modul SMP
+            [
+                'title' => 'Matematika SMP - Aljabar Dasar',
+                'description' => 'Pengenalan konsep aljabar, variabel, dan persamaan linear untuk kelas 7 SMP.',
+                'cover_image' => 'modules/covers/matematika-smp-7.jpg',
+                'pdf_file' => 'modules/pdfs/matematika-smp-7-aljabar.pdf',
+                'grade_level' => 'SMP',
+                'subject' => 'Matematika',
+                'class_number' => 7,
+                'views' => 234,
+                'is_active' => true,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'title' => 'IPA SMP - Sistem Pencernaan Manusia',
+                'description' => 'Memahami sistem pencernaan manusia dan organ-organ yang terlibat.',
+                'cover_image' => 'modules/covers/ipa-smp-8.jpg',
+                'pdf_file' => 'modules/pdfs/ipa-smp-8-pencernaan.pdf',
+                'grade_level' => 'SMP',
+                'subject' => 'IPA',
+                'class_number' => 8,
+                'views' => 187,
+                'is_active' => true,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'title' => 'Bahasa Inggris SMP - Tenses',
+                'description' => 'Belajar berbagai tenses dalam bahasa Inggris dengan contoh kalimat.',
+                'cover_image' => 'modules/covers/english-smp-9.jpg',
+                'pdf_file' => 'modules/pdfs/english-smp-9-tenses.pdf',
+                'grade_level' => 'SMP',
+                'subject' => 'Bahasa Inggris',
+                'class_number' => 9,
+                'views' => 156,
+                'is_active' => true,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+
+            // Modul SMA
+            [
+                'title' => 'Matematika SMA - Trigonometri',
+                'description' => 'Modul lengkap trigonometri untuk kelas 10 SMA. Membahas sin, cos, tan dan aplikasinya.',
+                'cover_image' => 'modules/covers/matematika-sma-10.jpg',
+                'pdf_file' => 'modules/pdfs/matematika-sma-10-trigonometri.pdf',
+                'grade_level' => 'SMA',
+                'subject' => 'Matematika',
+                'class_number' => 10,
+                'views' => 312,
+                'is_active' => true,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'title' => 'Fisika SMA - Hukum Newton',
+                'description' => 'Memahami tiga hukum Newton tentang gerak dan penerapannya dalam kehidupan sehari-hari.',
+                'cover_image' => 'modules/covers/fisika-sma-10.jpg',
+                'pdf_file' => 'modules/pdfs/fisika-sma-10-newton.pdf',
+                'grade_level' => 'SMA',
+                'subject' => 'Fisika',
+                'class_number' => 10,
+                'views' => 289,
+                'is_active' => true,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'title' => 'Kimia SMA - Ikatan Kimia',
+                'description' => 'Modul pembelajaran ikatan kimia: ikatan ion, kovalen, dan logam.',
+                'cover_image' => 'modules/covers/kimia-sma-10.jpg',
+                'pdf_file' => 'modules/pdfs/kimia-sma-10-ikatan.pdf',
+                'grade_level' => 'SMA',
+                'subject' => 'Kimia',
+                'class_number' => 10,
+                'views' => 201,
+                'is_active' => true,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'title' => 'Ekonomi SMA - Penawaran dan Permintaan',
+                'description' => 'Memahami konsep dasar ekonomi: penawaran, permintaan, dan keseimbangan pasar.',
+                'cover_image' => 'modules/covers/ekonomi-sma-10.jpg',
+                'pdf_file' => 'modules/pdfs/ekonomi-sma-10-supply-demand.pdf',
+                'grade_level' => 'SMA',
+                'subject' => 'Ekonomi',
+                'class_number' => 10,
+                'views' => 178,
+                'is_active' => true,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'title' => 'Sejarah SMA - Peradaban Dunia Kuno',
+                'description' => 'Mempelajari peradaban kuno: Mesir, Yunani, dan Romawi.',
+                'cover_image' => 'modules/covers/sejarah-sma-10.jpg',
+                'pdf_file' => 'modules/pdfs/sejarah-sma-10-peradaban.pdf',
+                'grade_level' => 'SMA',
+                'subject' => 'Sejarah',
+                'class_number' => 10,
+                'views' => 143,
+                'is_active' => true,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'title' => 'Biologi SMA - Sistem Reproduksi',
+                'description' => 'Modul pembelajaran sistem reproduksi manusia kelas 11 SMA.',
+                'cover_image' => 'modules/covers/biologi-sma-11.jpg',
+                'pdf_file' => 'modules/pdfs/biologi-sma-11-reproduksi.pdf',
+                'grade_level' => 'SMA',
+                'subject' => 'Biologi',
+                'class_number' => 11,
+                'views' => 267,
+                'is_active' => true,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+        ];
+
+        DB::table('modules')->insert($modules);
+    }
+}
