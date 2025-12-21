@@ -8,17 +8,12 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        // Buat user dummy untuk testing
-        \App\Models\User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-            'password' => bcrypt('password'),
-        ]);
-
-        // Jalankan seeder tryout
         $this->call([
-            TryoutSeeder::class,
-            UserTryoutSeeder::class, // Seeder untuk relasi user-tryout
+            ClassSeeder::class,      // Buat kelas dulu
+            UserSeeder::class,        // Baru buat users (karena user butuh class_id)
+            TryoutSeeder::class,      // Buat tryout
+            UserTryoutSeeder::class,  // Buat relasi user-tryout
+            ModuleSeeder::class,      // Buat modul
         ]);
     }
 }

@@ -16,11 +16,11 @@ class DashboardController extends Controller
 
         // Stats
         $stats = [
-            'total_tryouts' => Tryout::active()->count(),
+            'total_tryouts' => Tryout::count(),
             'completed_tryouts' => $user->tryouts()
                 ->wherePivot('status', 'sudah_dikerjakan')
                 ->count(),
-            'pending_tryouts' => Tryout::active()
+            'pending_tryouts' => Tryout::query()
                 ->whereDoesntHave('users', function($query) use ($user) {
                     $query->where('user_id', $user->id)
                           ->where('status', 'sudah_dikerjakan');
@@ -34,7 +34,7 @@ class DashboardController extends Controller
         ];
 
         // Tryout terbaru yang belum dikerjakan (3 terakhir)
-        $recentTryouts = Tryout::active()
+        $recentTryouts = Tryout::query()
             ->whereDoesntHave('users', function($query) use ($user) {
                 $query->where('user_id', $user->id);
             })
@@ -49,13 +49,15 @@ class DashboardController extends Controller
             ->take(3)
             ->get();
 
-        // Modul yang baru dilihat/populer (berdasarkan views)
+        // Modul yang terakhir dibuka (3 terakhir berdasarkan updated_at)
+        // Updated_at berubah ketika user view PDF (karena views di-increment)
         $recentModules = Module::active()
             ->when($user->grade_level, function($query) use ($user) {
                 return $query->where('grade_level', $user->grade_level);
             })
-            ->orderBy('views', 'desc')
-            ->take(6)
+            ->where('views', '>', 0) // Hanya modul yang pernah dibuka
+            ->orderBy('updated_at', 'desc') // Urutkan berdasarkan terakhir diupdate
+            ->take(4)
             ->get();
 
         // Average score dari tryout yang sudah dikerjakan

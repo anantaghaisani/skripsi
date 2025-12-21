@@ -19,11 +19,24 @@ class Module extends Model
         'class_number',
         'views',
         'is_active',
+        'created_by',
     ];
 
     protected $casts = [
         'is_active' => 'boolean',
     ];
+
+    // Relasi ke Creator (tentor yang membuat)
+    public function creator()
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
+    // Relasi ke Classes (many-to-many)
+    public function classes()
+{
+    return $this->belongsToMany(Classes::class, 'class_module', 'module_id', 'class_id');
+}
 
     // Scope untuk filter berdasarkan jenjang
     public function scopeByGrade($query, $grade)
@@ -41,6 +54,20 @@ class Module extends Model
     public function scopeActive($query)
     {
         return $query->where('is_active', true);
+    }
+
+    // Scope untuk module by creator
+    public function scopeByCreator($query, $userId)
+    {
+        return $query->where('created_by', $userId);
+    }
+
+    // Scope untuk module by class
+    public function scopeForClass($query, $classId)
+    {
+        return $query->whereHas('classes', function($q) use ($classId) {
+            $q->where('classes.id', $classId);
+        });
     }
 
     // Increment views

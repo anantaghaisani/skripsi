@@ -6,24 +6,21 @@
 @section('content')
 <div class="p-8 space-y-6">
     
-    <!-- Hero Banner with Logo -->
-    <div class="relative bg-gradient-to-r from-[#184E83] via-blue-600 to-indigo-700 rounded-2xl overflow-hidden shadow-xl">
+    <!-- Compact Hero Banner -->
+    <div class="relative bg-gradient-to-r from-[#184E83] via-blue-600 to-indigo-700 rounded-xl overflow-hidden shadow-lg">
         <div class="absolute inset-0 bg-black/10"></div>
-        <div class="absolute top-0 right-0 w-1/2 h-full opacity-10">
+        <div class="absolute top-0 right-0 w-1/3 h-full opacity-10">
             <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" class="w-full h-full">
                 <path fill="#FFFFFF" d="M44.7,-76.4C58.8,-69.2,71.8,-59.1,79.6,-45.8C87.4,-32.6,90,-16.3,88.5,-0.9C87,14.6,81.4,29.2,73.1,42.8C64.8,56.4,53.8,69,40.4,76.8C27,84.6,11.2,87.6,-4.8,85.9C-20.8,84.2,-37,77.8,-51.4,69.3C-65.8,60.8,-78.4,50.2,-85.3,36.4C-92.2,22.6,-93.4,5.6,-89.8,-9.8C-86.2,-25.2,-77.8,-38.9,-67.3,-50.8C-56.8,-62.7,-44.2,-72.8,-30.1,-80.1C-16,-87.4,-0.4,-92,14.6,-89.6C29.6,-87.2,30.6,-83.6,44.7,-76.4Z" transform="translate(100 100)" />
             </svg>
         </div>
         
-        <div class="relative px-8 py-12 flex items-center justify-between">
+        <div class="relative px-6 py-6 flex items-center justify-between">
             <div class="flex-1">
-                <div class="flex items-center space-x-4 mb-4">
-                    <img src="{{ asset('images/logo_hmc.png') }}" alt="HM Logo" class="h-16 brightness-0 invert">
-                </div>
-                <h1 class="text-3xl font-bold text-white mb-2">
+                <h1 class="text-2xl font-bold text-white mb-1">
                     Selamat Datang, {{ $user->name }}! 👋
                 </h1>
-                <p class="text-blue-100 text-lg">
+                <p class="text-blue-100 text-sm">
                     @if($user->grade_level && $user->class_number)
                         {{ $user->grade_level }} Kelas {{ $user->class_number }} • 
                     @endif
@@ -31,9 +28,9 @@
                 </p>
             </div>
             
-            <!-- Decorative illustration -->
+            <!-- Decorative icon -->
             <div class="hidden lg:block">
-                <svg class="w-48 h-48 text-white/20" fill="currentColor" viewBox="0 0 24 24">
+                <svg class="w-24 h-24 text-white/20" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5zm0 18.5c-3.25-.92-6-4.62-6-8.5V8.3l6-3.11v15.31z"/>
                 </svg>
             </div>
@@ -191,18 +188,26 @@
 
         </div>
 
-        <!-- Right Column: Modul Populer -->
+        <!-- Right Column: Modul Terakhir Dibuka -->
         <div class="space-y-6">
             <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
                 <div class="flex items-center justify-between mb-4">
-                    <h2 class="text-lg font-bold text-gray-900">📚 Modul Populer</h2>
+                    <h2 class="text-lg font-bold text-gray-900">📖 Terakhir Dibuka</h2>
                     <a href="{{ route('modules.index') }}" class="text-sm text-blue-600 hover:text-blue-700 font-medium">
                         Lihat Semua →
                     </a>
                 </div>
 
                 @if($recentModules->isEmpty())
-                    <p class="text-center text-gray-500 py-8">Belum ada modul</p>
+                    <div class="text-center py-8">
+                        <svg class="w-12 h-12 text-gray-300 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                        </svg>
+                        <p class="text-sm text-gray-500 mb-2">Belum ada modul dibuka</p>
+                        <a href="{{ route('modules.index') }}" class="text-xs text-blue-600 hover:text-blue-700 font-medium">
+                            Jelajahi Modul →
+                        </a>
+                    </div>
                 @else
                     <div class="space-y-3">
                         @foreach($recentModules as $module)
@@ -218,7 +223,7 @@
                                         <h4 class="font-semibold text-gray-900 text-sm truncate">{{ $module->title }}</h4>
                                         <div class="flex items-center space-x-2 mt-1">
                                             <span class="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded">{{ $module->subject }}</span>
-                                            <span class="text-xs text-gray-500">{{ $module->views }} views</span>
+                                            <span class="text-xs text-gray-500">{{ $module->updated_at->diffForHumans() }}</span>
                                         </div>
                                     </div>
                                 </div>
