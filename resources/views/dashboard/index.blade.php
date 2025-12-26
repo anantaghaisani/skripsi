@@ -15,14 +15,14 @@
             </svg>
         </div>
         
-        <div class="relative px-6 py-6 flex items-center justify-between">
+       <div class="relative px-6 py-6 flex items-center justify-between">
             <div class="flex-1">
                 <h1 class="text-2xl font-bold text-white mb-1">
-                    Selamat Datang, {{ $user->name }}! 👋
+                    Selamat Datang, {{ Auth::user()->name }}! 👋
                 </h1>
                 <p class="text-blue-100 text-sm">
-                    @if($user->grade_level && $user->class_number)
-                        {{ $user->grade_level }} Kelas {{ $user->class_number }} • 
+                    @if(Auth::user()->grade_level && Auth::user()->class_number)
+                        {{ Auth::user()->grade_level }} Kelas {{ Auth::user()->class_number }} • 
                     @endif
                     Siap belajar hari ini?
                 </p>
@@ -44,7 +44,7 @@
             <div class="flex items-center justify-between">
                 <div>
                     <p class="text-sm text-gray-600 mb-1">Total Tryout</p>
-                    <h3 class="text-3xl font-bold text-gray-900">{{ $stats['total_tryouts'] }}</h3>
+                    <h3 class="text-3xl font-bold text-gray-900">{{ $totalTryouts }}</h3>
                 </div>
                 <div class="w-14 h-14 bg-blue-50 rounded-xl flex items-center justify-center">
                     <svg class="w-7 h-7 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -60,7 +60,7 @@
             <div class="flex items-center justify-between">
                 <div>
                     <p class="text-sm text-gray-600 mb-1">Sudah Dikerjakan</p>
-                    <h3 class="text-3xl font-bold text-green-600">{{ $stats['completed_tryouts'] }}</h3>
+                    <h3 class="text-3xl font-bold text-green-600">{{ $completedTryouts }}</h3>
                 </div>
                 <div class="w-14 h-14 bg-green-50 rounded-xl flex items-center justify-center">
                     <svg class="w-7 h-7 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -92,7 +92,7 @@
             <div class="flex items-center justify-between">
                 <div>
                     <p class="text-sm text-gray-600 mb-1">Modul Tersedia</p>
-                    <h3 class="text-3xl font-bold text-purple-600">{{ $stats['total_modules'] }}</h3>
+                    <h3 class="text-3xl font-bold text-purple-600">{{ $totalModules }}</h3>
                 </div>
                 <div class="w-14 h-14 bg-purple-50 rounded-xl flex items-center justify-center">
                     <svg class="w-7 h-7 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -122,6 +122,9 @@
                 @else
                     <div class="space-y-3">
                         @foreach($recentTryouts as $tryout)
+                            @php
+                                $isCompleted = in_array($tryout->id, $completedTryoutIds);
+                            @endphp
                             <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition">
                                 <div class="flex items-center space-x-3">
                                     <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
@@ -131,54 +134,71 @@
                                     </div>
                                     <div>
                                         <h4 class="font-semibold text-gray-900 text-sm">{{ $tryout->title }}</h4>
-                                        <p class="text-xs text-gray-500">{{ $tryout->total_questions }} soal • {{ $tryout->start_date->format('d M Y') }}</p>
+                                        <p class="text-xs text-gray-500">{{ $tryout->questions->count() }} soal • {{ $tryout->start_date->format('d M Y') }}</p>
                                     </div>
                                 </div>
-                                <form action="{{ route('tryout.start', $tryout->id) }}" method="POST">
-                                    @csrf
-                                    <button type="submit" class="px-4 py-2 bg-[#FFC107] hover:bg-yellow-500 text-gray-900 text-sm font-semibold rounded-lg transition">
+                                @if($isCompleted)
+                                    <a href="{{ route('tryout.review', $tryout->id) }}" class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-semibold rounded-lg transition">
+                                        Review
+                                    </a>
+                                @else
+                                    <a href="{{ route('tryout.show', $tryout->id) }}" class="px-4 py-2 bg-[#FFC107] hover:bg-yellow-500 text-gray-900 text-sm font-semibold rounded-lg transition">
                                         Kerjakan
-                                    </button>
-                                </form>
+                                    </a>
+                                @endif
                             </div>
                         @endforeach
                     </div>
                 @endif
             </div>
 
-            <!-- Tryout yang Baru Selesai -->
+            <!-- Tryout Selesai Section -->
             <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
                 <div class="flex items-center justify-between mb-4">
-                    <h2 class="text-lg font-bold text-gray-900">✅ Tryout Selesai</h2>
-                    <a href="{{ route('tryout.index') }}" class="text-sm text-blue-600 hover:text-blue-700 font-medium">
-                        Lihat Semua →
-                    </a>
+                    <div class="flex items-center">
+                        <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center mr-3">
+                            <svg class="w-6 h-6 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            </svg>
+                        </div>
+                        <h3 class="text-lg font-bold text-gray-900">Tryout Selesai</h3>
+                    </div>
+                    @if($completedTryoutsList->isNotEmpty())
+                        <a href="{{ route('tryout.index') }}" class="text-sm text-hm-blue hover:underline">
+                            Lihat Semua →
+                        </a>
+                    @endif
                 </div>
 
-                @if($completedTryouts->isEmpty())
-                    <p class="text-center text-gray-500 py-8">Belum ada tryout yang selesai</p>
+                @if($completedTryoutsList->isEmpty())
+                    <div class="text-center py-8">
+                        <svg class="w-16 h-16 mx-auto text-gray-300 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <p class="text-gray-500">Belum ada tryout yang selesai</p>
+                    </div>
                 @else
                     <div class="space-y-3">
-                        @foreach($completedTryouts as $tryout)
-                            @php
-                                $userTryout = $tryout->users->first();
-                                $score = $userTryout->pivot->score ?? 0;
-                            @endphp
-                            <div class="flex items-center justify-between p-4 bg-green-50 rounded-lg">
-                                <div class="flex items-center space-x-3">
-                                    <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+                        @foreach($completedTryoutsList as $tryout)
+                            <div class="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:border-green-300 transition">
+                                <div class="flex items-start space-x-3 flex-1">
+                                    <div class="w-10 h-10 bg-green-50 rounded-lg flex items-center justify-center flex-shrink-0">
                                         <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                                         </svg>
                                     </div>
-                                    <div>
-                                        <h4 class="font-semibold text-gray-900 text-sm">{{ $tryout->title }}</h4>
-                                        <p class="text-xs text-gray-500">Selesai {{ $userTryout->pivot->finished_at ? \Carbon\Carbon::parse($userTryout->pivot->finished_at)->diffForHumans() : '-' }}</p>
+                                    <div class="flex-1 min-w-0">
+                                        <h4 class="font-semibold text-gray-900 truncate">{{ $tryout->title }}</h4>
+                                        <div class="flex items-center text-xs text-gray-500 mt-1">
+                                            <span>{{ $tryout->questions->count() }} soal</span>
+                                            <span class="mx-2">•</span>
+                                            <span>{{ \Carbon\Carbon::parse($tryout->finished_at)->format('d M Y, H:i') }}</span>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="text-right">
-                                    <p class="text-2xl font-bold text-green-600">{{ $score }}</p>
-                                    <p class="text-xs text-gray-500">Nilai</p>
+                                    <div class="text-right">
+                                        <div class="text-2xl font-bold text-green-600">{{ $tryout->user_score }}</div>
+                                        <div class="text-xs text-gray-500">Nilai</div>
+                                    </div>
                                 </div>
                             </div>
                         @endforeach
@@ -211,7 +231,7 @@
                 @else
                     <div class="space-y-3">
                         @foreach($recentModules as $module)
-                            <a href="{{ route('modules.view-pdf', $module->id) }}" target="_blank" 
+                            <a href="{{ route('modules.show', $module->id) }}" 
                                class="block p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg hover:shadow-md transition">
                                 <div class="flex items-start space-x-3">
                                     <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-lg flex items-center justify-center flex-shrink-0">
@@ -223,7 +243,7 @@
                                         <h4 class="font-semibold text-gray-900 text-sm truncate">{{ $module->title }}</h4>
                                         <div class="flex items-center space-x-2 mt-1">
                                             <span class="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded">{{ $module->subject }}</span>
-                                            <span class="text-xs text-gray-500">{{ $module->updated_at->diffForHumans() }}</span>
+                                            <span class="text-xs text-gray-500">{{ $module->created_at->diffForHumans() }}</span>
                                         </div>
                                     </div>
                                 </div>

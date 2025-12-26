@@ -1,21 +1,17 @@
-@extends('tentor.layout')
+@extends('tentor.layouts.app')
 
 @section('title', 'Monitor Tryout - Hakuna Matata Course')
-@section('page-title', 'Monitor Tryout')
+
+@section('breadcrumb')
+    @include('tentor.components.breadcrumb', [
+        'backUrl' => route('tentor.tryout.index'),
+        'previousPage' => 'Daftar Tryout',
+        'currentPage' => 'Monitor Tryout'
+    ])
+@endsection
 
 @section('content')
 <div class="p-8 space-y-6">
-
-    <!-- Back Button -->
-    <div>
-        <a href="{{ route('tentor.tryout.index') }}" 
-           class="inline-flex items-center text-gray-600 hover:text-gray-900 transition">
-            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
-            </svg>
-            Kembali ke Daftar Tryout
-        </a>
-    </div>
 
     <!-- Tryout Info Card -->
     <div class="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl p-6 text-white shadow-lg">

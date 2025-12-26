@@ -3,176 +3,144 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
+use App\Models\Module;
+use App\Models\User;
+use App\Models\Classes;
 
 class ModuleSeeder extends Seeder
 {
+    /**
+     * Run the database seeds.
+     */
     public function run(): void
     {
+        echo "\n📚 Creating sample modules...\n\n";
+
+        // Get tentor user
+        $tentor = User::where('role', 'tentor')->first();
+        
+        if (!$tentor) {
+            echo "❌ Tentor not found! Run UserSeeder first.\n";
+            return;
+        }
+
+        // Get classes by ID (ambil 3 kelas pertama)
+        $classes = Classes::orderBy('id')->limit(3)->get();
+        
+        if ($classes->count() < 3) {
+            echo "❌ Not enough classes! Need at least 3 classes.\n";
+            return;
+        }
+
+        $class1 = $classes[0]->id; // SMP 7A
+        $class2 = $classes[1]->id; // SMP 7B  
+        $class3 = $classes[2]->id; // SMP 8A
+
         $modules = [
-            // Modul SD
             [
-                'title' => 'Matematika Dasar - Penjumlahan dan Pengurangan',
-                'description' => 'Modul pembelajaran matematika dasar untuk kelas 1 SD. Membahas konsep penjumlahan dan pengurangan dengan cara yang menyenangkan.',
-                'cover_image' => 'modules/covers/matematika-sd-1.jpg',
-                'pdf_file' => 'modules/pdfs/matematika-sd-1-penjumlahan.pdf',
-                'grade_level' => 'SD',
-                'subject' => 'Matematika',
-                'class_number' => 1,
-                'views' => 125,
+                'title' => 'Matematika Dasar - Aljabar',
+                'description' => 'Modul pembelajaran aljabar dasar untuk SMP kelas 7. Membahas variabel, persamaan linear, dan penerapannya.',
+                'file_path' => 'modules/matematika-aljabar.pdf',
+                'file_type' => 'pdf',
+                'file_size' => 2457600, // 2.4 MB
+                'thumbnail' => 'module-thumbnails/matematika-thumb.jpg',
                 'is_active' => true,
-                'created_at' => now(),
-                'updated_at' => now(),
+                'created_by' => $tentor->id,
+                'classes' => [$class1, $class2],
             ],
             [
-                'title' => 'Bahasa Indonesia - Membaca dan Menulis',
-                'description' => 'Belajar membaca dan menulis huruf kapital dan huruf kecil dengan mudah.',
-                'cover_image' => 'modules/covers/bahasa-sd-1.jpg',
-                'pdf_file' => 'modules/pdfs/bahasa-indonesia-sd-1.pdf',
-                'grade_level' => 'SD',
-                'subject' => 'Bahasa Indonesia',
-                'class_number' => 1,
-                'views' => 98,
+                'title' => 'IPA - Sistem Pencernaan Manusia',
+                'description' => 'Memahami sistem pencernaan manusia, organ-organ yang terlibat, dan proses pencernaan makanan.',
+                'file_path' => 'modules/ipa-pencernaan.pdf',
+                'file_type' => 'pdf',
+                'file_size' => 3145728, // 3 MB
+                'thumbnail' => 'module-thumbnails/ipa-thumb.jpg',
                 'is_active' => true,
-                'created_at' => now(),
-                'updated_at' => now(),
+                'created_by' => $tentor->id,
+                'classes' => [$class3],
             ],
             [
-                'title' => 'IPA - Mengenal Tumbuhan',
-                'description' => 'Modul pengenalan tumbuhan dan bagian-bagiannya untuk kelas 3 SD.',
-                'cover_image' => 'modules/covers/ipa-sd-3.jpg',
-                'pdf_file' => 'modules/pdfs/ipa-sd-3-tumbuhan.pdf',
-                'grade_level' => 'SD',
-                'subject' => 'IPA',
-                'class_number' => 3,
-                'views' => 87,
+                'title' => 'Bahasa Indonesia - Teks Eksplanasi',
+                'description' => 'Modul pembelajaran tentang teks eksplanasi: struktur, ciri-ciri, dan cara membuatnya.',
+                'file_path' => 'modules/bahasa-indonesia-eksplanasi.pdf',
+                'file_type' => 'pdf',
+                'file_size' => 1835008, // 1.75 MB
+                'thumbnail' => null,
                 'is_active' => true,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-
-            // Modul SMP
-            [
-                'title' => 'Matematika SMP - Aljabar Dasar',
-                'description' => 'Pengenalan konsep aljabar, variabel, dan persamaan linear untuk kelas 7 SMP.',
-                'cover_image' => 'modules/covers/matematika-smp-7.jpg',
-                'pdf_file' => 'modules/pdfs/matematika-smp-7-aljabar.pdf',
-                'grade_level' => 'SMP',
-                'subject' => 'Matematika',
-                'class_number' => 7,
-                'views' => 234,
-                'is_active' => true,
-                'created_at' => now(),
-                'updated_at' => now(),
+                'created_by' => $tentor->id,
+                'classes' => [$class1, $class2, $class3],
             ],
             [
-                'title' => 'IPA SMP - Sistem Pencernaan Manusia',
-                'description' => 'Memahami sistem pencernaan manusia dan organ-organ yang terlibat.',
-                'cover_image' => 'modules/covers/ipa-smp-8.jpg',
-                'pdf_file' => 'modules/pdfs/ipa-smp-8-pencernaan.pdf',
-                'grade_level' => 'SMP',
-                'subject' => 'IPA',
-                'class_number' => 8,
-                'views' => 187,
+                'title' => 'Bahasa Inggris - Simple Present Tense',
+                'description' => 'Belajar simple present tense dengan contoh kalimat dan latihan soal.',
+                'file_path' => 'modules/english-simple-present.pdf',
+                'file_type' => 'pdf',
+                'file_size' => 1572864, // 1.5 MB
+                'thumbnail' => 'module-thumbnails/english-thumb.jpg',
                 'is_active' => true,
-                'created_at' => now(),
-                'updated_at' => now(),
+                'created_by' => $tentor->id,
+                'classes' => [$class1],
             ],
             [
-                'title' => 'Bahasa Inggris SMP - Tenses',
-                'description' => 'Belajar berbagai tenses dalam bahasa Inggris dengan contoh kalimat.',
-                'cover_image' => 'modules/covers/english-smp-9.jpg',
-                'pdf_file' => 'modules/pdfs/english-smp-9-tenses.pdf',
-                'grade_level' => 'SMP',
-                'subject' => 'Bahasa Inggris',
-                'class_number' => 9,
-                'views' => 156,
+                'title' => 'IPS - Keberagaman Budaya Indonesia',
+                'description' => 'Mengenal keberagaman budaya, suku, dan adat istiadat di Indonesia.',
+                'file_path' => 'modules/ips-budaya-indonesia.pdf',
+                'file_type' => 'pdf',
+                'file_size' => 4194304, // 4 MB
+                'thumbnail' => 'module-thumbnails/ips-thumb.jpg',
                 'is_active' => true,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-
-            // Modul SMA
-            [
-                'title' => 'Matematika SMA - Trigonometri',
-                'description' => 'Modul lengkap trigonometri untuk kelas 10 SMA. Membahas sin, cos, tan dan aplikasinya.',
-                'cover_image' => 'modules/covers/matematika-sma-10.jpg',
-                'pdf_file' => 'modules/pdfs/matematika-sma-10-trigonometri.pdf',
-                'grade_level' => 'SMA',
-                'subject' => 'Matematika',
-                'class_number' => 10,
-                'views' => 312,
-                'is_active' => true,
-                'created_at' => now(),
-                'updated_at' => now(),
+                'created_by' => $tentor->id,
+                'classes' => [$class1, $class2],
             ],
             [
-                'title' => 'Fisika SMA - Hukum Newton',
-                'description' => 'Memahami tiga hukum Newton tentang gerak dan penerapannya dalam kehidupan sehari-hari.',
-                'cover_image' => 'modules/covers/fisika-sma-10.jpg',
-                'pdf_file' => 'modules/pdfs/fisika-sma-10-newton.pdf',
-                'grade_level' => 'SMA',
-                'subject' => 'Fisika',
-                'class_number' => 10,
-                'views' => 289,
+                'title' => 'Matematika - Perbandingan dan Skala',
+                'description' => 'Memahami konsep perbandingan, skala, dan aplikasinya dalam kehidupan sehari-hari.',
+                'file_path' => 'modules/matematika-perbandingan.pdf',
+                'file_type' => 'pdf',
+                'file_size' => 2097152, // 2 MB
+                'thumbnail' => null,
                 'is_active' => true,
-                'created_at' => now(),
-                'updated_at' => now(),
+                'created_by' => $tentor->id,
+                'classes' => [$class1],
             ],
             [
-                'title' => 'Kimia SMA - Ikatan Kimia',
-                'description' => 'Modul pembelajaran ikatan kimia: ikatan ion, kovalen, dan logam.',
-                'cover_image' => 'modules/covers/kimia-sma-10.jpg',
-                'pdf_file' => 'modules/pdfs/kimia-sma-10-ikatan.pdf',
-                'grade_level' => 'SMA',
-                'subject' => 'Kimia',
-                'class_number' => 10,
-                'views' => 201,
-                'is_active' => true,
-                'created_at' => now(),
-                'updated_at' => now(),
+                'title' => 'IPA - Gerak Lurus',
+                'description' => 'Modul pembelajaran tentang gerak lurus: GLB dan GLBB dengan rumus dan contoh soal.',
+                'file_path' => 'modules/ipa-gerak-lurus.pdf',
+                'file_type' => 'pdf',
+                'file_size' => 2621440, // 2.5 MB
+                'thumbnail' => 'module-thumbnails/fisika-thumb.jpg',
+                'is_active' => false, // Draft
+                'created_by' => $tentor->id,
+                'classes' => [$class3],
             ],
             [
-                'title' => 'Ekonomi SMA - Penawaran dan Permintaan',
-                'description' => 'Memahami konsep dasar ekonomi: penawaran, permintaan, dan keseimbangan pasar.',
-                'cover_image' => 'modules/covers/ekonomi-sma-10.jpg',
-                'pdf_file' => 'modules/pdfs/ekonomi-sma-10-supply-demand.pdf',
-                'grade_level' => 'SMA',
-                'subject' => 'Ekonomi',
-                'class_number' => 10,
-                'views' => 178,
+                'title' => 'PKN - Pancasila sebagai Dasar Negara',
+                'description' => 'Memahami nilai-nilai Pancasila dan implementasinya dalam kehidupan berbangsa dan bernegara.',
+                'file_path' => 'modules/pkn-pancasila.pdf',
+                'file_type' => 'pdf',
+                'file_size' => 1048576, // 1 MB
+                'thumbnail' => null,
                 'is_active' => true,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'title' => 'Sejarah SMA - Peradaban Dunia Kuno',
-                'description' => 'Mempelajari peradaban kuno: Mesir, Yunani, dan Romawi.',
-                'cover_image' => 'modules/covers/sejarah-sma-10.jpg',
-                'pdf_file' => 'modules/pdfs/sejarah-sma-10-peradaban.pdf',
-                'grade_level' => 'SMA',
-                'subject' => 'Sejarah',
-                'class_number' => 10,
-                'views' => 143,
-                'is_active' => true,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'title' => 'Biologi SMA - Sistem Reproduksi',
-                'description' => 'Modul pembelajaran sistem reproduksi manusia kelas 11 SMA.',
-                'cover_image' => 'modules/covers/biologi-sma-11.jpg',
-                'pdf_file' => 'modules/pdfs/biologi-sma-11-reproduksi.pdf',
-                'grade_level' => 'SMA',
-                'subject' => 'Biologi',
-                'class_number' => 11,
-                'views' => 267,
-                'is_active' => true,
-                'created_at' => now(),
-                'updated_at' => now(),
+                'created_by' => $tentor->id,
+                'classes' => [$class1, $class2, $class3],
             ],
         ];
 
-        DB::table('modules')->insert($modules);
+        foreach ($modules as $index => $moduleData) {
+            $classIds = $moduleData['classes'];
+            unset($moduleData['classes']);
+
+            $module = Module::create($moduleData);
+            
+            // Attach classes (akan otomatis unique karena constraint)
+            $module->classes()->sync($classIds);
+
+            echo "  ✅ Module " . ($index + 1) . ": {$module->title}\n";
+            echo "     Classes: " . implode(', ', $classIds) . "\n";
+        }
+
+        echo "\n✅ " . count($modules) . " modules created successfully!\n";
+        echo "👤 Created by: {$tentor->name}\n";
     }
 }

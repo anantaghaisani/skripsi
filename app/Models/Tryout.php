@@ -98,11 +98,11 @@ class Tryout extends Model
 
     // Scope untuk tryout by class
     public function scopeForClass($query, $classId)
-    {
-        return $query->whereHas('classes', function($q) use ($classId) {
-            $q->where('classes.id', $classId);
-        });
-    }
+{
+    return $query->whereHas('classes', function($q) use ($classId) {
+        $q->where('classes.id', $classId);
+    });
+}
 
     // Get students who completed this tryout
     public function getCompletedStudents()
@@ -153,9 +153,9 @@ class Tryout extends Model
 
     // Check if tryout has questions
     public function hasQuestions()
-    {
-        return $this->questions()->count() > 0;
-    }
+{
+    return $this->questions()->count() > 0;
+}
 
     // Get question count
     public function getQuestionCount()

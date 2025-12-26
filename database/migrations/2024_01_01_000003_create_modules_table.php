@@ -10,15 +10,14 @@ return new class extends Migration
     {
         Schema::create('modules', function (Blueprint $table) {
             $table->id();
-            $table->string('title'); // Judul modul
-            $table->text('description')->nullable(); // Deskripsi
-            $table->string('cover_image')->nullable(); // Cover/thumbnail
-            $table->string('pdf_file'); // Path file PDF
-            $table->enum('grade_level', ['SD', 'SMP', 'SMA']); // Jenjang
-            $table->string('subject'); // Mata pelajaran (Matematika, IPA, dll)
-            $table->integer('class_number')->nullable(); // Kelas berapa (1-12)
-            $table->integer('views')->default(0); // Jumlah view
-            $table->boolean('is_active')->default(true); // Status aktif/tidak
+            $table->string('title');
+            $table->text('description')->nullable();
+            $table->string('file_path');
+            $table->string('file_type');
+            $table->bigInteger('file_size');
+            $table->string('thumbnail')->nullable();
+            $table->boolean('is_active')->default(true);
+            $table->foreignId('created_by')->constrained('users')->onDelete('cascade');
             $table->timestamps();
         });
     }

@@ -1,130 +1,93 @@
 @extends('layouts.app')
 
-@section('title', 'Modul Pembelajaran - Hakuna Matata Course')
+@section('title', 'Modul Pembelajaran')
 @section('page-title', 'Modul Pembelajaran')
 
 @section('content')
 <div class="p-8">
-    <!-- Header Info -->
-    <div class="mb-6 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-6 border border-blue-100">
-        <div class="flex items-center justify-between">
-            <div>
-                <h2 class="text-lg font-bold text-gray-900 mb-1">
-                    Modul untuk {{ $user->grade_level ?? 'Semua Jenjang' }} 
-                    @if($user->class_number)
-                        - Kelas {{ $user->class_number }}
-                    @endif
-                </h2>
-                <p class="text-sm text-gray-600">
-                    Total {{ $modules->count() }} modul pembelajaran tersedia
-                </p>
+    <div class="max-w-7xl mx-auto">
+
+        <!-- Header -->
+        <div class="mb-8">
+            <div class="bg-gradient-to-r from-purple-600 to-indigo-600 rounded-xl p-6 text-white">
+                <h1 class="text-3xl font-bold mb-2">📚 Modul Pembelajaran</h1>
+                <p class="text-purple-100">Akses semua materi pembelajaran untuk kelasmu</p>
             </div>
-            <div class="flex items-center space-x-2">
-                <svg class="w-12 h-12 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        </div>
+
+        @if($modules->isEmpty())
+            <!-- Empty State -->
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-12 text-center">
+                <svg class="w-24 h-24 mx-auto text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
                 </svg>
+                <h3 class="text-xl font-bold text-gray-900 mb-2">Belum Ada Modul</h3>
+                <p class="text-gray-600">Modul pembelajaran belum tersedia untuk kelasmu</p>
             </div>
-        </div>
-    </div>
-
-    @if($modules->isEmpty())
-        <!-- Empty State -->
-        <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-12 text-center">
-            <svg class="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
-            </svg>
-            <h3 class="text-lg font-semibold text-gray-900 mb-2">Belum Ada Modul</h3>
-            <p class="text-sm text-gray-500">Modul pembelajaran untuk kelasmu akan segera tersedia.</p>
-        </div>
-    @else
-        <!-- Modules Grid - 3 Columns -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            @foreach($modules as $module)
-                <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-lg transition-all duration-300 group">
-                    <!-- Cover Image -->
-                    <div class="relative h-48 bg-gradient-to-br from-blue-500 to-indigo-600 overflow-hidden">
-                        @if($module->cover_image && file_exists(public_path('storage/' . $module->cover_image)))
-                            <img src="{{ asset('storage/' . $module->cover_image) }}" 
+        @else
+            <!-- Modules Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                @foreach($modules as $module)
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-lg transition group">
+                        <!-- Thumbnail -->
+                        @if($module->thumbnail)
+                            <img src="{{ asset('storage/' . $module->thumbnail) }}" 
                                  alt="{{ $module->title }}"
-                                 class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300">
+                                 class="w-full h-48 object-cover group-hover:scale-105 transition duration-300">
                         @else
-                            <!-- Default gradient with subject icon -->
-                            <div class="absolute inset-0 flex items-center justify-center">
-                                <div class="text-center text-white">
-                                    <svg class="w-16 h-16 mx-auto mb-2 opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
-                                    </svg>
-                                    <p class="text-sm font-semibold opacity-80">{{ $module->subject }}</p>
-                                </div>
+                            <div class="w-full h-48 bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center">
+                                <svg class="w-20 h-20 text-white opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                                </svg>
                             </div>
                         @endif
-                        
-                        <!-- Badge -->
-                        <div class="absolute top-3 right-3">
-                            <span class="px-3 py-1 bg-white/90 backdrop-blur-sm text-xs font-semibold text-gray-700 rounded-full">
-                                Kelas {{ $module->class_number }}
-                            </span>
-                        </div>
-                    </div>
 
-                    <!-- Content -->
-                    <div class="p-5">
-                        <!-- Subject Badge -->
-                        <div class="flex items-center justify-between mb-3">
-                            <span class="px-2 py-1 bg-blue-50 text-blue-700 text-xs font-semibold rounded">
-                                {{ $module->subject }}
-                            </span>
-                            <div class="flex items-center text-xs text-gray-500">
-                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
-                                </svg>
-                                {{ $module->views }} views
+                        <!-- Content -->
+                        <div class="p-5">
+                            <h3 class="font-bold text-gray-900 text-lg mb-2 line-clamp-2">{{ $module->title }}</h3>
+                            
+                            @if($module->description)
+                                <p class="text-gray-600 text-sm mb-4 line-clamp-2">{{ $module->description }}</p>
+                            @endif
+
+                            <!-- Meta Info -->
+                            <div class="flex items-center justify-between text-xs text-gray-500 mb-4">
+                                <div class="flex items-center">
+                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                                    </svg>
+                                    {{ $module->creator->name }}
+                                </div>
+                                <div class="flex items-center">
+                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                    {{ $module->created_at->diffForHumans() }}
+                                </div>
                             </div>
-                        </div>
 
-                        <!-- Title -->
-                        <h3 class="text-base font-bold text-gray-900 mb-2 line-clamp-2 group-hover:text-blue-600 transition">
-                            {{ $module->title }}
-                        </h3>
+                            <!-- File Info -->
+                            <div class="flex items-center justify-between py-3 px-3 bg-gray-50 rounded-lg mb-4">
+                                <span class="text-xs font-semibold text-gray-700 uppercase">{{ $module->file_type }}</span>
+                                <span class="text-xs text-gray-500">{{ number_format($module->file_size / 1024 / 1024, 2) }} MB</span>
+                            </div>
 
-                        <!-- Description -->
-                        <p class="text-sm text-gray-600 mb-4 line-clamp-2">
-                            {{ $module->description }}
-                        </p>
-
-                        <!-- Action Buttons -->
-                        <div class="flex gap-2">
-                            <a href="{{ route('modules.view-pdf', $module->id) }}" 
-                               target="_blank"
-                               class="flex-1 inline-flex items-center justify-center px-4 py-2.5 bg-[#184E83] hover:bg-blue-700 text-white text-sm font-semibold rounded-lg transition">
-                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
-                                </svg>
-                                Lihat PDF
-                            </a>
-                            <a href="{{ route('modules.download-pdf', $module->id) }}" 
-                               class="inline-flex items-center justify-center px-3 py-2.5 border border-gray-300 hover:border-gray-400 text-gray-700 text-sm font-semibold rounded-lg transition">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
-                                </svg>
+                            <!-- Action Button -->
+                            <a href="{{ route('modules.show', $module->id) }}" 
+                               class="block w-full text-center px-4 py-3 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-semibold rounded-lg transition shadow-sm">
+                                Lihat Detail
                             </a>
                         </div>
                     </div>
-                </div>
-            @endforeach
-        </div>
-    @endif
-</div>
+                @endforeach
+            </div>
 
-<style>
-    /* Line clamp utility */
-    .line-clamp-2 {
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;  
-        overflow: hidden;
-    }
-</style>
+            <!-- Pagination -->
+            <div class="mt-8">
+                {{ $modules->links() }}
+            </div>
+        @endif
+
+    </div>
+</div>
 @endsection

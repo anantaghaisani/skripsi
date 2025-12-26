@@ -2,76 +2,79 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Module;
 use App\Models\Tryout;
-use Illuminate\Http\Request;
+use App\Models\Module;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
     public function index()
     {
         $user = Auth::user();
+        
+        // Get tryouts for student's class that are active and have questions
+        $totalTryouts = Tryout::active()
+            ->forClass($user->class_id)
+            ->whereHas('questions')
+            ->count();
 
-        // Stats
-        $stats = [
-            'total_tryouts' => Tryout::count(),
-            'completed_tryouts' => $user->tryouts()
-                ->wherePivot('status', 'sudah_dikerjakan')
-                ->count(),
-            'pending_tryouts' => Tryout::query()
-                ->whereDoesntHave('users', function($query) use ($user) {
-                    $query->where('user_id', $user->id)
-                          ->where('status', 'sudah_dikerjakan');
-                })
-                ->count(),
-            'total_modules' => Module::active()
-                ->when($user->grade_level, function($query) use ($user) {
-                    return $query->where('grade_level', $user->grade_level);
-                })
-                ->count(),
-        ];
-
-        // Tryout terbaru yang belum dikerjakan (3 terakhir)
-        $recentTryouts = Tryout::query()
-            ->whereDoesntHave('users', function($query) use ($user) {
-                $query->where('user_id', $user->id);
-            })
-            ->orderBy('created_at', 'desc')
-            ->take(3)
-            ->get();
-
-        // Tryout yang baru selesai dikerjakan (3 terakhir)
-        $completedTryouts = $user->tryouts()
+        // Get completed tryouts IDs first
+        $completedTryoutIds = $user->tryouts()
             ->wherePivot('status', 'sudah_dikerjakan')
-            ->orderByPivot('finished_at', 'desc')
-            ->take(3)
-            ->get();
+            ->pluck('tryouts.id')
+            ->toArray();
 
-        // Modul yang terakhir dibuka (3 terakhir berdasarkan updated_at)
-        // Updated_at berubah ketika user view PDF (karena views di-increment)
-        $recentModules = Module::active()
-            ->when($user->grade_level, function($query) use ($user) {
-                return $query->where('grade_level', $user->grade_level);
-            })
-            ->where('views', '>', 0) // Hanya modul yang pernah dibuka
-            ->orderBy('updated_at', 'desc') // Urutkan berdasarkan terakhir diupdate
-            ->take(4)
-            ->get();
+        // Get completed tryouts count
+        $completedTryouts = count($completedTryoutIds);
 
-        // Average score dari tryout yang sudah dikerjakan
+        // Calculate average score from completed tryouts
         $averageScore = $user->tryouts()
             ->wherePivot('status', 'sudah_dikerjakan')
-            ->avg('user_tryouts.score');
+            ->avg('user_tryouts.score') ?? 0;
+
+        // Get recent tryouts that are NOT completed (limit 3)
+        $recentTryouts = Tryout::active()
+            ->forClass($user->class_id)
+            ->whereHas('questions')
+            ->whereNotIn('id', $completedTryoutIds)
+            ->with(['classes', 'questions'])
+            ->latest()
+            ->limit(3)
+            ->get();
+
+        // Get completed tryouts with score (limit 3)
+        $completedTryoutsList = Tryout::whereIn('id', $completedTryoutIds)
+            ->with(['classes', 'questions'])
+            ->latest()
+            ->limit(3)
+            ->get()
+            ->map(function($tryout) use ($user) {
+                $userTryout = $user->tryouts()->where('tryout_id', $tryout->id)->first();
+                $tryout->user_score = $userTryout ? $userTryout->pivot->score : 0;
+                $tryout->finished_at = $userTryout ? $userTryout->pivot->finished_at : null;
+                return $tryout;
+            });
+
+        // Get available modules for student's class
+        $totalModules = Module::forClass($user->class_id)
+            ->count();
+
+        // Get recent modules (limit 3)
+        $recentModules = Module::forClass($user->class_id)
+            ->with('classes')
+            ->latest()
+            ->limit(3)
+            ->get();
 
         return view('dashboard.index', compact(
-            'stats',
-            'recentTryouts',
+            'totalTryouts',
             'completedTryouts',
-            'recentModules',
             'averageScore',
-            'user'
+            'recentTryouts',
+            'completedTryoutIds',
+            'completedTryoutsList',
+            'totalModules',
+            'recentModules'
         ));
     }
 }

@@ -52,7 +52,7 @@ class Classes extends Model
 
     // Get full name (e.g., "SMP 7A")
     public function getFullNameAttribute()
-    {
-        return "{$this->grade_level} {$this->class_number}{$this->name}";
-    }
+{
+    return $this->grade_level . ' ' . $this->class_number . $this->name;
+}
 }

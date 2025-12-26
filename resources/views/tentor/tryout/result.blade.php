@@ -1,21 +1,17 @@
-@extends('tentor.layout')
+@extends('tentor.layouts.app')
 
 @section('title', 'Hasil Tryout - Hakuna Matata Course')
-@section('page-title', 'Hasil Tryout')
+
+@section('breadcrumb')
+    @include('tentor.components.breadcrumb', [
+        'backUrl' => route('tentor.tryout.monitor', $tryout->id),
+        'previousPage' => 'Monitor',
+        'currentPage' => 'Detail Hasil'
+    ])
+@endsection
 
 @section('content')
 <div class="p-8 space-y-6">
-
-    <!-- Back Button -->
-    <div>
-        <a href="{{ route('tentor.tryout.monitor', $tryout->id) }}" 
-           class="inline-flex items-center text-gray-600 hover:text-gray-900 transition">
-            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
-            </svg>
-            Kembali ke Monitor
-        </a>
-    </div>
 
     <!-- Student Info Card -->
     <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">

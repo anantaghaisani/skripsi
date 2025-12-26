@@ -56,7 +56,7 @@
                 </a>
 
                 <!-- Modul -->
-                <a href="{{ route('tentor.module.index') }}" 
+                <a href="{{ route('tentor.modules.index') }}" 
                    class="flex items-center space-x-3 px-4 py-3 rounded-lg 
                    {{ Request::is('tentor/module*') ? 'bg-hm-blue text-white' : 'text-gray-400 hover:bg-gray-50' }} transition">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -79,13 +79,19 @@
 
         <!-- Main Content Area -->
         <div class="flex-1 flex flex-col overflow-hidden">
-            <!-- Top Bar (Transparent) -->
+            <!-- Top Bar with Breadcrumb -->
             <header class="px-8 py-4 bg-transparent transition-all duration-300">
                 <div class="flex items-center justify-between">
-                    <!-- Page Title -->
-                    <h1 class="text-3xl font-bold text-hm-blue">
-                        @yield('page-title', 'Dashboard')
-                    </h1>
+                    <!-- Breadcrumb Navigation -->
+                    <div class="flex items-center space-x-2">
+                        @if(View::hasSection('breadcrumb'))
+                            @yield('breadcrumb')
+                        @else
+                            <h1 class="text-3xl font-bold text-hm-blue">
+                                @yield('page-title', 'Dashboard')
+                            </h1>
+                        @endif
+                    </div>
 
                     <!-- User Profile Section -->
                     <div class="flex items-center space-x-4">

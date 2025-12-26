@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Module;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 
 class ModuleController extends Controller
 {
@@ -13,12 +12,11 @@ class ModuleController extends Controller
     {
         $user = Auth::user();
         
-        // Get modules for user's class
         $modules = Module::active()
             ->forClass($user->class_id)
             ->with(['classes', 'creator'])
             ->latest()
-            ->paginate(12);
+            ->get();
 
         return view('modules.index', compact('modules'));
     }
@@ -27,37 +25,30 @@ class ModuleController extends Controller
     {
         $user = Auth::user();
         
-        // Get module and verify access
         $module = Module::active()
             ->forClass($user->class_id)
             ->with(['classes', 'creator'])
             ->findOrFail($id);
 
-        // Track module view (optional - comment out if user_modules table not needed)
-        try {
-            DB::table('user_modules')->updateOrInsert(
-                ['user_id' => $user->id, 'module_id' => $module->id],
-                ['last_accessed_at' => now(), 'created_at' => now(), 'updated_at' => now()]
-            );
-        } catch (\Exception $e) {
-            // Ignore if table doesn't exist
-        }
+        // Track view
+        \DB::table('user_modules')->updateOrInsert(
+            ['user_id' => $user->id, 'module_id' => $module->id],
+            ['last_accessed_at' => now(), 'updated_at' => now()]
+        );
 
         return view('modules.show', compact('module'));
     }
 
     public function viewPdf($id)
     {
-        $user = Auth::user();
-        
         $module = Module::active()
-            ->forClass($user->class_id)
+            ->forClass(Auth::user()->class_id)
             ->findOrFail($id);
 
         $filePath = storage_path('app/public/' . $module->file_path);
 
         if (!file_exists($filePath)) {
-            abort(404, 'File tidak ditemukan');
+            abort(404, 'File not found');
         }
 
         return response()->file($filePath);
@@ -65,20 +56,16 @@ class ModuleController extends Controller
 
     public function downloadPdf($id)
     {
-        $user = Auth::user();
-        
         $module = Module::active()
-            ->forClass($user->class_id)
+            ->forClass(Auth::user()->class_id)
             ->findOrFail($id);
 
         $filePath = storage_path('app/public/' . $module->file_path);
 
         if (!file_exists($filePath)) {
-            abort(404, 'File tidak ditemukan');
+            abort(404, 'File not found');
         }
 
-        $fileName = $module->title . '.' . $module->file_type;
-        
-        return response()->download($filePath, $fileName);
+        return response()->download($filePath, $module->title . '.' . $module->file_type);
     }
 }

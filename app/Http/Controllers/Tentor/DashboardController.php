@@ -16,33 +16,36 @@ class DashboardController extends Controller
 
         // Stats untuk tentor
         $stats = [
-            'total_tryouts' => Tryout::byCreator($tentor->id)->count(),
-            'active_tryouts' => Tryout::byCreator($tentor->id)->active()->count(),
-            'total_modules' => Module::byCreator($tentor->id)->count(),
-            'total_students' => User::students()->count(),
+            'total_tryouts' => Tryout::where('created_by', $tentor->id)->count(),
+            'active_tryouts' => Tryout::where('created_by', $tentor->id)->where('is_active', true)->count(),
+            'total_modules' => Module::where('created_by', $tentor->id)->count(),
+            'total_students' => User::where('role', 'student')->count(),
         ];
 
         // Tryout terbaru yang dibuat tentor (5 terakhir)
-        $recentTryouts = Tryout::byCreator($tentor->id)
+        $recentTryouts = Tryout::where('created_by', $tentor->id)
             ->orderBy('created_at', 'desc')
             ->take(5)
             ->get();
 
-        // Module terbaru yang dibuat tentor (5 terakhir)
-        $recentModules = Module::byCreator($tentor->id)
-            ->orderBy('created_at', 'desc')
-            ->take(5)
+        // Module terbaru yang dibuat tentor (3 terakhir)
+        $recentModules = Module::where('created_by', $tentor->id)
+            ->latest()
+            ->take(3)
             ->get();
 
         // Tryout dengan completion rate tertinggi
-        $popularTryouts = Tryout::byCreator($tentor->id)
+        $popularTryouts = Tryout::where('created_by', $tentor->id)
             ->with('users')
             ->get()
             ->map(function($tryout) {
+                $totalStudents = $tryout->users()->count();
+                $completedCount = $tryout->users()->wherePivot('status', 'sudah_dikerjakan')->count();
+                
                 return [
                     'tryout' => $tryout,
-                    'completion_rate' => $tryout->getCompletionRate(),
-                    'completed_count' => $tryout->users()->wherePivot('status', 'sudah_dikerjakan')->count(),
+                    'completion_rate' => $totalStudents > 0 ? round(($completedCount / $totalStudents) * 100) : 0,
+                    'completed_count' => $completedCount,
                 ];
             })
             ->sortByDesc('completed_count')

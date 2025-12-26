@@ -1,6 +1,5 @@
 <?php
 
-
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\DashboardController;
@@ -14,15 +13,12 @@ use App\Http\Controllers\Tentor\ModuleController as TentorModuleController;
 use App\Http\Controllers\Tentor\ProfileController as TentorProfileController;
 use Illuminate\Support\Facades\Route;
 
-
+// Temporary logout route
 Route::get('/logout-now', function() {
     auth()->logout();
     request()->session()->invalidate();
     request()->session()->regenerateToken();
     return redirect('/login')->with('status', 'Berhasil logout!');
-});
-Route::get('/', function () {
-    return redirect()->route('login');
 });
 
 // Redirect root ke login
@@ -55,7 +51,10 @@ Route::middleware(['auth', 'role:student'])->group(function () {
         Route::get('/{id}', [TryoutController::class, 'show'])->name('show');
         Route::post('/{id}/start', [TryoutController::class, 'start'])->name('start');
         Route::get('/{id}/work', [TryoutController::class, 'work'])->name('work');
+        Route::post('/{id}/save-answer', [TryoutController::class, 'saveAnswer'])->name('save-answer');
         Route::post('/{id}/submit', [TryoutController::class, 'submit'])->name('submit');
+        Route::get('/{id}/result', [TryoutController::class, 'result'])->name('result');
+        Route::get('/{id}/review', [TryoutController::class, 'review'])->name('review');
     });
 
     // Module Routes
@@ -92,25 +91,7 @@ Route::middleware(['auth', 'role:tentor'])->prefix('tentor')->name('tentor.')->g
         Route::get('/{tryoutId}/result/{userId}', [TentorTryoutController::class, 'showResult'])->name('result');
     });
 
-    // Module Management
-    Route::prefix('module')->name('module.')->group(function () {
-        Route::get('/', [TentorModuleController::class, 'index'])->name('index');
-        Route::get('/create', [TentorModuleController::class, 'create'])->name('create');
-        Route::post('/', [TentorModuleController::class, 'store'])->name('store');
-        Route::get('/{id}/edit', [TentorModuleController::class, 'edit'])->name('edit');
-        Route::put('/{id}', [TentorModuleController::class, 'update'])->name('update');
-        Route::delete('/{id}', [TentorModuleController::class, 'destroy'])->name('destroy');
-    });
-
-    // Profile
-    Route::prefix('profile')->name('profile.')->group(function () {
-        Route::get('/', [TentorProfileController::class, 'index'])->name('index');
-        Route::put('/update-password', [TentorProfileController::class, 'updatePassword'])->name('update-password');
-        Route::put('/update-photo', [TentorProfileController::class, 'updatePhoto'])->name('update-photo');
-        Route::delete('/delete-photo', [TentorProfileController::class, 'deletePhoto'])->name('delete-photo');
-    });
-
-    // Question Management Routes 
+    // Question Management Routes
     Route::prefix('tryout/{tryout}/question')->name('question.')->group(function () {
         Route::get('/', [TentorQuestionController::class, 'index'])->name('index');
         Route::get('/create', [TentorQuestionController::class, 'create'])->name('create');
@@ -120,5 +101,26 @@ Route::middleware(['auth', 'role:tentor'])->prefix('tentor')->name('tentor.')->g
         Route::delete('/{question}', [TentorQuestionController::class, 'destroy'])->name('destroy');
         Route::get('/bulk-create', [TentorQuestionController::class, 'bulkCreate'])->name('bulk-create');
         Route::post('/bulk-store', [TentorQuestionController::class, 'bulkStore'])->name('bulk-store');
+    });
+
+    // Module Management (FIXED!)
+    Route::prefix('modules')->name('modules.')->group(function () {
+        Route::get('/', [TentorModuleController::class, 'index'])->name('index');
+        Route::get('/create', [TentorModuleController::class, 'create'])->name('create');
+        Route::post('/', [TentorModuleController::class, 'store'])->name('store');
+        Route::get('/{id}', [TentorModuleController::class, 'show'])->name('show');
+        Route::get('/{id}/edit', [TentorModuleController::class, 'edit'])->name('edit');
+        Route::put('/{id}', [TentorModuleController::class, 'update'])->name('update');
+        Route::delete('/{id}', [TentorModuleController::class, 'destroy'])->name('destroy');
+        Route::post('/{id}/toggle-status', [TentorModuleController::class, 'toggleStatus'])->name('toggle-status');
+        Route::delete('/bulk-delete', [TentorModuleController::class, 'bulkDelete'])->name('bulk-delete');
+    });
+
+    // Profile
+    Route::prefix('profile')->name('profile.')->group(function () {
+        Route::get('/', [TentorProfileController::class, 'index'])->name('index');
+        Route::put('/update-password', [TentorProfileController::class, 'updatePassword'])->name('update-password');
+        Route::put('/update-photo', [TentorProfileController::class, 'updatePhoto'])->name('update-photo');
+        Route::delete('/delete-photo', [TentorProfileController::class, 'deletePhoto'])->name('delete-photo');
     });
 });

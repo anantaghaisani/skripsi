@@ -82,10 +82,16 @@
             <!-- Top Bar -->
             <header class="px-8 py-4 bg-transparent transition-all duration-300">
                 <div class="flex items-center justify-between">
-                    <!-- Page Title -->
-                    <h1 class="text-3xl font-bold text-hm-blue">
-                        @yield('page-title', 'Dashboard')
-                    </h1>
+                    <!-- Page Title / Breadcrumb -->
+                    <div>
+                        @hasSection('breadcrumb')
+                            @yield('breadcrumb')
+                        @else
+                            <h1 class="text-3xl font-bold text-hm-blue">
+                                @yield('page-title', 'Dashboard')
+                            </h1>
+                        @endif
+                    </div>
 
                     <!-- User Profile Section -->
                     <div class="flex items-center space-x-4">

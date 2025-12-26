@@ -39,11 +39,13 @@ class Module extends Model
         return $this->hasMany(UserModule::class);
     }
 
+    // Scope untuk filter module active
     public function scopeActive($query)
     {
         return $query->where('is_active', true);
     }
 
+    // Scope untuk filter by class
     public function scopeForClass($query, $classId)
     {
         return $query->whereHas('classes', function($q) use ($classId) {

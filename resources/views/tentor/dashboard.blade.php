@@ -1,4 +1,4 @@
-@extends('tentor.layout')
+@extends('tentor.layouts.app')
 
 @section('title', 'Dashboard Tentor - Hakuna Matata Course')
 @section('page-title', 'Dashboard')
@@ -127,7 +127,7 @@
             <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
                 <div class="flex items-center justify-between mb-4">
                     <h2 class="text-lg font-bold text-gray-900">📚 Modul Terbaru</h2>
-                    <a href="{{ route('tentor.module.index') }}" class="text-sm text-blue-600 hover:text-blue-700 font-medium">
+                    <a href="{{ route('tentor.modules.index') }}" class="text-sm text-blue-600 hover:text-blue-700 font-medium">
                         Lihat Semua →
                     </a>
                 </div>
@@ -135,7 +135,7 @@
                 @if($recentModules->isEmpty())
                     <div class="text-center py-8">
                         <p class="text-gray-500 mb-3">Belum ada modul</p>
-                        <a href="{{ route('tentor.module.create') }}" class="inline-flex items-center px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition">
+                        <a href="{{ route('tentor.modules.create') }}" class="inline-flex items-center px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition">
                             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
                             </svg>
@@ -192,7 +192,7 @@
                     <a href="{{ route('tentor.tryout.create') }}" class="block w-full py-3 px-4 bg-white hover:bg-gray-50 text-gray-900 font-medium rounded-lg transition text-center shadow-sm">
                         + Buat Tryout Baru
                     </a>
-                    <a href="{{ route('tentor.module.create') }}" class="block w-full py-3 px-4 bg-white hover:bg-gray-50 text-gray-900 font-medium rounded-lg transition text-center shadow-sm">
+                    <a href="{{ route('tentor.modules.create') }}" class="block w-full py-3 px-4 bg-white hover:bg-gray-50 text-gray-900 font-medium rounded-lg transition text-center shadow-sm">
                         + Upload Modul Baru
                     </a>
                 </div>
