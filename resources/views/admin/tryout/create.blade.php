@@ -1,33 +1,26 @@
-@extends('tentor.layouts.app')
+@extends('admin.layouts.app')
 
-@section('title', 'Edit Tryout - Hakuna Matata Course')
+@section('title', 'Buat Tryout Baru - Hakuna Matata Course')
 
 @section('breadcrumb')
     @include('tentor.components.breadcrumb', [
-        'backUrl' => route('tentor.tryout.index'),
+        'backUrl' => route('admin.tryout.index'),
         'previousPage' => 'Daftar Tryout',
-        'currentPage' => 'Edit Tryout'
+        'currentPage' => 'Buat Tryout Baru'
     ])
 @endsection
 
 @section('content')
-<!-- <div class="p-8"> -->
+<div class="p-8">
 
     <div class="max-w-4xl mx-auto">
 
         <!-- Form Card -->
         <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-8">
-            <div class="flex items-center justify-between mb-6">
-                <h2 class="text-2xl font-bold text-gray-900">Edit Tryout</h2>
-                <div class="text-sm">
-                    <span class="text-gray-500">Token:</span>
-                    <span class="ml-2 font-mono font-bold text-blue-600">{{ $tryout->token }}</span>
-                </div>
-            </div>
+            <h2 class="text-2xl font-bold text-gray-900 mb-6">Form Tryout Baru</h2>
 
-            <form action="{{ route('tentor.tryout.update', $tryout->id) }}" method="POST" class="space-y-6">
+            <form action="{{ route('admin.tryout.store') }}" method="POST" class="space-y-6">
                 @csrf
-                @method('PUT')
 
                 <!-- Title -->
                 <div>
@@ -37,8 +30,9 @@
                     <input type="text" 
                            id="title" 
                            name="title" 
-                           value="{{ old('title', $tryout->title) }}"
+                           value="{{ old('title') }}"
                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                           placeholder="Contoh: TRYOUT UTBK 2026 #01 - SNBT"
                            required>
                     @error('title')
                         <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
@@ -53,12 +47,14 @@
                     <input type="text" 
                            id="code" 
                            name="code" 
-                           value="{{ old('code', $tryout->code) }}"
+                           value="{{ old('code') }}"
                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                           placeholder="Contoh: UTBK2026-01"
                            required>
                     @error('code')
                         <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
                     @enderror
+                    <p class="text-xs text-gray-500 mt-1">Kode unik untuk identifikasi tryout</p>
                 </div>
 
                 <!-- Description -->
@@ -69,7 +65,8 @@
                     <textarea id="description" 
                               name="description" 
                               rows="3"
-                              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">{{ old('description', $tryout->description) }}</textarea>
+                              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                              placeholder="Deskripsi singkat tentang tryout ini">{{ old('description') }}</textarea>
                     @error('description')
                         <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
                     @enderror
@@ -84,7 +81,7 @@
                         <input type="date" 
                                id="start_date" 
                                name="start_date" 
-                               value="{{ old('start_date', $tryout->start_date->format('Y-m-d')) }}"
+                               value="{{ old('start_date') }}"
                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                required>
                         @error('start_date')
@@ -99,7 +96,7 @@
                         <input type="date" 
                                id="end_date" 
                                name="end_date" 
-                               value="{{ old('end_date', $tryout->end_date->format('Y-m-d')) }}"
+                               value="{{ old('end_date') }}"
                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                required>
                         @error('end_date')
@@ -117,7 +114,7 @@
                         <input type="number" 
                                id="total_questions" 
                                name="total_questions" 
-                               value="{{ old('total_questions', $tryout->total_questions) }}"
+                               value="{{ old('total_questions', 50) }}"
                                min="1"
                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                required>
@@ -133,7 +130,7 @@
                         <input type="number" 
                                id="duration_minutes" 
                                name="duration_minutes" 
-                               value="{{ old('duration_minutes', $tryout->duration_minutes) }}"
+                               value="{{ old('duration_minutes', 120) }}"
                                min="1"
                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                required>
@@ -143,19 +140,7 @@
                     </div>
                 </div>
 
-                <!-- Active Status -->
-                <div>
-                    <label class="flex items-center">
-                        <input type="checkbox" 
-                               name="is_active" 
-                               {{ old('is_active', $tryout->is_active) ? 'checked' : '' }}
-                               class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
-                        <span class="ml-2 text-sm font-medium text-gray-700">Tryout Aktif</span>
-                    </label>
-                    <p class="text-xs text-gray-500 mt-1 ml-6">Jika dinonaktifkan, siswa tidak dapat mengakses tryout ini</p>
-                </div>
-
-                <!-- Classes Selection -->
+                <!-- Classes Selection (Multi-select) -->
                 <div>
                     <label class="block text-sm font-semibold text-gray-700 mb-2">
                         Pilih Kelas <span class="text-red-500">*</span>
@@ -176,7 +161,7 @@
                                             <input type="checkbox" 
                                                    name="classes[]" 
                                                    value="{{ $class->id }}"
-                                                   {{ in_array($class->id, old('classes', $selectedClasses)) ? 'checked' : '' }}
+                                                   {{ in_array($class->id, old('classes', [])) ? 'checked' : '' }}
                                                    class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
                                             <span class="ml-2 text-sm text-gray-900">
                                                 {{ $class->grade_level }} {{ $class->class_number }}{{ $class->name }}
@@ -193,15 +178,30 @@
                     @enderror
                 </div>
 
+                <!-- Info Box -->
+                <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                    <div class="flex">
+                        <svg class="w-5 h-5 text-blue-600 mr-3 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+                        </svg>
+                        <div>
+                            <h4 class="text-sm font-semibold text-blue-900 mb-1">Informasi Token</h4>
+                            <p class="text-sm text-blue-700">
+                                Token akses akan di-generate otomatis setelah tryout dibuat. Siswa memerlukan token ini untuk mengakses tryout.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Submit Buttons -->
                 <div class="flex items-center justify-end space-x-4 pt-6 border-t">
-                    <a href="{{ route('tentor.tryout.index') }}" 
+                    <a href="{{ route('admin.tryout.index') }}" 
                        class="px-6 py-3 border border-gray-300 text-gray-700 font-semibold rounded-lg hover:bg-gray-50 transition">
                         Batal
                     </a>
                     <button type="submit" 
                             class="px-6 py-3 bg-hm-blue hover:bg-blue-700 text-white font-semibold rounded-lg transition shadow-sm">
-                        Simpan Perubahan
+                        Buat Tryout
                     </button>
                 </div>
             </form>

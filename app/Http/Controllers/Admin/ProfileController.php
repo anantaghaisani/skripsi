@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -17,36 +18,12 @@ class ProfileController extends Controller
     {
         $user = Auth::user();
         
-        // Stats
-        $completedTryouts = $user->tryouts()
-            ->wherePivot('status', 'sudah_dikerjakan')
-            ->count();
-            
-        $averageScore = $user->tryouts()
-            ->wherePivot('status', 'sudah_dikerjakan')
-            ->avg('user_tryouts.score');
+        // Stats untuk admin
+        $totalUsers = \App\Models\User::count();
+        $totalTryouts = \App\Models\Tryout::count();
+        $totalModules = \App\Models\Module::count();
         
-        return view('profile.index', compact('user', 'completedTryouts', 'averageScore'));
-    }
-
-    /**
-     * Update profile information
-     */
-    public function updateProfile(Request $request)
-    {
-        $user = Auth::user();
-        
-        $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,' . $user->id],
-            'grade_level' => ['nullable', 'in:SD,SMP,SMA'],
-            'class_number' => ['nullable', 'integer', 'min:1', 'max:12'],
-        ]);
-
-        $user->update($validated);
-
-        return redirect()->route('profile.index')
-            ->with('success', 'Profile berhasil diperbarui!');
+        return view('admin.profile.index', compact('user', 'totalUsers', 'totalTryouts', 'totalModules'));
     }
 
     /**
@@ -64,7 +41,7 @@ class ProfileController extends Controller
             'password' => Hash::make($validated['password']),
         ]);
 
-        return redirect()->route('profile.index')
+        return redirect()->route('admin.profile.index')
             ->with('success', 'Password berhasil diubah!');
     }
 
@@ -74,12 +51,12 @@ class ProfileController extends Controller
     public function updatePhoto(Request $request)
     {
         $request->validate([
-            'photo' => ['required', 'image', 'mimes:jpeg,png,jpg', 'max:2048'], // Max 2MB
+            'photo' => ['required', 'image', 'mimes:jpeg,png,jpg', 'max:2048'],
         ]);
 
         $user = Auth::user();
 
-        // Delete old photo if exists
+        // Delete old photo
         if ($user->photo && Storage::disk('public')->exists($user->photo)) {
             Storage::disk('public')->delete($user->photo);
         }
@@ -91,7 +68,7 @@ class ProfileController extends Controller
             'photo' => $path,
         ]);
 
-        return redirect()->route('profile.index')
+        return redirect()->route('admin.profile.index')
             ->with('success', 'Foto profil berhasil diperbarui!');
     }
 
@@ -110,7 +87,7 @@ class ProfileController extends Controller
             'photo' => null,
         ]);
 
-        return redirect()->route('profile.index')
+        return redirect()->route('admin.profile.index')
             ->with('success', 'Foto profil berhasil dihapus!');
     }
 }

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Harapan Matata Course</title>
+    <title>Login - Hakuna Matata Course</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -126,7 +126,7 @@
         <!-- Footer -->
         <div class="text-center mt-6">
             <p class="text-sm text-gray-600">
-                &copy; {{ date('Y') }} Harapan Matata Course. All rights reserved.
+                &copy; {{ date('Y') }} Hakuna Matata Course. All rights reserved.
             </p>
         </div>
     </div>
