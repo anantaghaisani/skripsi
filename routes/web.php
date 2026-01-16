@@ -23,7 +23,7 @@ Route::get('/logout-now', function() {
 
 // Redirect root ke login
 Route::get('/', function () {
-    return redirect()->route('login');
+    return view('welcome');
 });
 
 // Guest Routes
