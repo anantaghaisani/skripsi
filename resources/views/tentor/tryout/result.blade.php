@@ -80,9 +80,28 @@
         
         @php
             $totalQuestions = $tryout->total_questions ?? 0;
-            $correctAnswers = $student->pivot->correct_answers ?? 0;
-            $wrongAnswers = $student->pivot->wrong_answers ?? 0;
-            $unanswered = $totalQuestions - ($correctAnswers + $wrongAnswers);
+            $score = $student->pivot->score ?? 0;
+            
+            // Calculate correct answers from score (assuming each question worth equal points)
+            // If score is 100 and total questions is 25, then correct = 25
+            $correctAnswers = $totalQuestions > 0 ? round(($score / 100) * $totalQuestions) : 0;
+            
+            // Get answers data from pivot if available, otherwise calculate
+            if (isset($student->pivot->correct_answers)) {
+                $correctAnswers = $student->pivot->correct_answers;
+            }
+            
+            if (isset($student->pivot->wrong_answers)) {
+                $wrongAnswers = $student->pivot->wrong_answers;
+            } else {
+                // Calculate wrong answers
+                $wrongAnswers = $totalQuestions - $correctAnswers;
+            }
+            
+            // Unanswered = total - (correct + wrong)
+            // If all answered, unanswered should be 0
+            $answered = $correctAnswers + $wrongAnswers;
+            $unanswered = $totalQuestions > $answered ? $totalQuestions - $answered : 0;
         @endphp
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
