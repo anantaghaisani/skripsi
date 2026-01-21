@@ -15,6 +15,12 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'role' => \App\Http\Middleware\RoleMiddleware::class,
             'active' => \App\Http\Middleware\CheckUserActive::class,
+            'prevent.back' => \App\Http\Middleware\PreventBackHistory::class,
+        ]);
+        
+        // Apply prevent back history to web middleware group
+        $middleware->web(append: [
+            \App\Http\Middleware\PreventBackHistory::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

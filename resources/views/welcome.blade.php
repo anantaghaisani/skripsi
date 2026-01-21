@@ -44,10 +44,7 @@
             <div class="flex items-center justify-between">
                 <!-- Logo -->
                 <div class="flex items-center space-x-3">
-                    <!-- DUMMY LOGO - Replace with: <img src="{{ asset('images/logo.png') }}" alt="HMC Logo" class="h-12 w-auto"> -->
-                    <div class="w-12 h-12 bg-gradient-to-br from-[#184E83] to-[#FFBF00] rounded-full flex items-center justify-center text-white font-bold text-xl">
-                        HMC
-                    </div>
+                    <img src="{{ asset('images/logo_hmc.png') }}" alt="HMC Logo" class="h-12 w-auto">
                     <div>
                         <h1 class="text-xl font-bold text-[#184E83]">Hakuna Matata</h1>
                         <p class="text-xs text-gray-600">Course</p>
@@ -86,7 +83,7 @@
         </div>
     </nav>
 
-    <!-- Hero Section -->
+        <!-- Hero Section -->
     <section id="beranda" class="pt-24 pb-16 wave-pattern relative overflow-hidden">
         <div class="max-w-7xl mx-auto px-6 py-20">
             <div class="grid md:grid-cols-2 gap-12 items-center">
@@ -100,7 +97,7 @@
                         Bimbingan belajar terbaik untuk SD, SMP, dan SMA dengan metode pembelajaran yang menyenangkan dan efektif.
                     </p>
                     <div class="flex flex-wrap gap-4">
-                        <a href="{{ route('register') }}" class="btn-primary px-8 py-4 text-[#184E83] font-bold rounded-full transition transform">
+                        <a href="https://docs.google.com/forms/d/e/1FAIpQLSenK5uHuv3jRGelG_nRNuO1TOXGkzIC2Z-lz0kdzDZjG2MR1g/viewform?pli=1" target="_blank" class="btn-primary px-8 py-4 text-[#184E83] font-bold rounded-full transition transform">
                             Daftar Sekarang
                         </a>
                         <a href="#tentang" class="px-8 py-4 border-2 border-white text-white font-semibold rounded-full hover:bg-white hover:text-[#184E83] transition">
@@ -111,15 +108,11 @@
 
                 <!-- Right Content - Illustration -->
                 <div class="relative float-animation">
-                    <!-- DUMMY IMAGE - Replace with: <img src="{{ asset('images/hero-illustration.png') }}" alt="Students" class="w-full"> -->
-                    <div class="w-full h-96 bg-white/10 backdrop-blur-sm rounded-3xl flex items-center justify-center">
-                        <div class="text-center text-white">
-                            <svg class="w-48 h-48 mx-auto mb-4 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
-                            </svg>
-                            <p class="text-lg">Hero Illustration Here</p>
-                            <p class="text-sm opacity-70">Replace with actual image</p>
-                        </div>
+                    <!-- Hero Illustration with Size Control -->
+                    <div class="max-w-md mx-auto">
+                        <img src="{{ asset('images/logolengkapp.png') }}" 
+                             alt="Hakuna Matata Course" 
+                             class="w-full h-auto object-contain drop-shadow-2xl">
                     </div>
                 </div>
             </div>
@@ -202,60 +195,116 @@
         </div>
     </section>
 
-    <!-- Tentor Section -->
-    <section id="tentor" class="py-20 bg-white">
-        <div class="max-w-7xl mx-auto px-6">
-            <div class="text-center mb-16">
-                <h2 class="text-4xl font-bold gradient-text mb-4">Tentor Berpengalaman</h2>
-                <p class="text-xl text-gray-600">Tim pengajar profesional yang siap membimbing kesuksesan Anda</p>
-            </div>
+<!-- Tentor Section -->
+<section id="tentor" class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-6">
+        <div class="text-center mb-16">
+            <h2 class="text-4xl font-bold gradient-text mb-4">Tentor Berpengalaman</h2>
+            <p class="text-xl text-gray-600">Tim pengajar profesional yang siap membimbing kesuksesan Anda</p>
+        </div>
 
-            <div class="grid md:grid-cols-4 gap-8">
-                <!-- Tentor 1 - EDITABLE -->
-                <div class="text-center">
-                    <!-- DUMMY PHOTO - Replace with: <img src="{{ asset('images/tentor1.jpg') }}" alt="Tentor 1" class="w-40 h-40 rounded-full mx-auto mb-4 object-cover border-4 border-[#FFBF00]"> -->
-                    <div class="w-40 h-40 rounded-full mx-auto mb-4 bg-gradient-to-br from-[#184E83] to-[#FFBF00] flex items-center justify-center text-white text-4xl font-bold border-4 border-[#FFBF00]">
-                        T1
-                    </div>
-                    <h3 class="text-xl font-bold text-[#184E83] mb-2">Nama Tentor 1</h3>
+        <!-- Carousel -->
+        <div class="relative">
+            <div
+                id="tentorCarousel"
+                class="flex gap-6 overflow-x-auto scroll-smooth pb-6 snap-x snap-mandatory scrollbar-hide"
+            >
+                <!-- Tentor Card -->
+                <div class="tentor-card flex-shrink-0 w-72 text-center snap-center">
+                    <img src="{{ asset('images/Miss Al.JPG') }}" class="w-48 h-48 rounded-full mx-auto mb-4 object-cover border-4 border-[#FFBF00] shadow-lg">
+                    <h3 class="text-xl font-bold text-[#184E83] mb-2">Miss Al</h3>
                     <p class="text-gray-600 mb-2">Matematika & Fisika</p>
                     <p class="text-sm text-gray-500">S.Pd., M.Pd.</p>
                 </div>
 
-                <!-- Tentor 2 - EDITABLE -->
-                <div class="text-center">
-                    <div class="w-40 h-40 rounded-full mx-auto mb-4 bg-gradient-to-br from-[#184E83] to-[#FFBF00] flex items-center justify-center text-white text-4xl font-bold border-4 border-[#FFBF00]">
-                        T2
-                    </div>
-                    <h3 class="text-xl font-bold text-[#184E83] mb-2">Nama Tentor 2</h3>
+                <div class="tentor-card flex-shrink-0 w-72 text-center snap-center">
+                    <img src="{{ asset('images/Bu Tutut.jpg') }}" class="w-48 h-48 rounded-full mx-auto mb-4 object-cover border-4 border-[#FFBF00] shadow-lg">
+                    <h3 class="text-xl font-bold text-[#184E83] mb-2">Bu Tutut</h3>
                     <p class="text-gray-600 mb-2">Bahasa Inggris</p>
                     <p class="text-sm text-gray-500">S.Pd.</p>
                 </div>
 
-                <!-- Tentor 3 - EDITABLE -->
-                <div class="text-center">
-                    <div class="w-40 h-40 rounded-full mx-auto mb-4 bg-gradient-to-br from-[#184E83] to-[#FFBF00] flex items-center justify-center text-white text-4xl font-bold border-4 border-[#FFBF00]">
-                        T3
-                    </div>
-                    <h3 class="text-xl font-bold text-[#184E83] mb-2">Nama Tentor 3</h3>
+                <div class="tentor-card flex-shrink-0 w-72 text-center snap-center">
+                    <img src="{{ asset('images/Bu May.JPG') }}" class="w-48 h-48 rounded-full mx-auto mb-4 object-cover border-4 border-[#FFBF00] shadow-lg">
+                    <h3 class="text-xl font-bold text-[#184E83] mb-2">Bu May</h3>
                     <p class="text-gray-600 mb-2">Kimia & Biologi</p>
                     <p class="text-sm text-gray-500">S.Si., M.Si.</p>
                 </div>
 
-                <!-- Tentor 4 - EDITABLE -->
-                <div class="text-center">
-                    <div class="w-40 h-40 rounded-full mx-auto mb-4 bg-gradient-to-br from-[#184E83] to-[#FFBF00] flex items-center justify-center text-white text-4xl font-bold border-4 border-[#FFBF00]">
-                        T4
-                    </div>
-                    <h3 class="text-xl font-bold text-[#184E83] mb-2">Nama Tentor 4</h3>
+                <div class="tentor-card flex-shrink-0 w-72 text-center snap-center">
+                    <img src="{{ asset('images/Pak Eko.JPG') }}" class="w-48 h-48 rounded-full mx-auto mb-4 object-cover border-4 border-[#FFBF00] shadow-lg">
+                    <h3 class="text-xl font-bold text-[#184E83] mb-2">Pak Eko</h3>
                     <p class="text-gray-600 mb-2">IPS & Ekonomi</p>
                     <p class="text-sm text-gray-500">S.E., M.M.</p>
                 </div>
+
+                <div class="tentor-card flex-shrink-0 w-72 text-center snap-center">
+                    <img src="{{ asset('images/Bu Ima.JPG') }}" class="w-48 h-48 rounded-full mx-auto mb-4 object-cover border-4 border-[#FFBF00] shadow-lg">
+                    <h3 class="text-xl font-bold text-[#184E83] mb-2">Bu Ima</h3>
+                    <p class="text-gray-600 mb-2">Bahasa Indonesia</p>
+                    <p class="text-sm text-gray-500">S.Pd.</p>
+                </div>
+
+                <div class="tentor-card flex-shrink-0 w-72 text-center snap-center">
+                    <img src="{{ asset('images/Pak Rizal.JPG') }}" class="w-48 h-48 rounded-full mx-auto mb-4 object-cover border-4 border-[#FFBF00] shadow-lg">
+                    <h3 class="text-xl font-bold text-[#184E83] mb-2">Pak Rizal</h3>
+                    <p class="text-gray-600 mb-2">Matematika</p>
+                    <p class="text-sm text-gray-500">S.Pd.</p>
+                </div>
             </div>
 
-            <!-- Add More Tentors - Duplicate the above div structure as needed -->
+            <!-- Dots -->
+            <div id="tentorDots" class="flex justify-center gap-2 mt-8"></div>
+
+            <p class="text-center text-gray-500 text-sm mt-4 md:hidden">
+                ← Geser untuk melihat tentor lainnya →
+            </p>
         </div>
-    </section>
+    </div>
+</section>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const carousel = document.getElementById('tentorCarousel');
+    const cards = carousel.querySelectorAll('.tentor-card');
+    const dotsContainer = document.getElementById('tentorDots');
+
+    const itemsPerPage = 4;
+    const totalPages = Math.ceil(cards.length / itemsPerPage);
+
+    // Create dots
+    for (let i = 0; i < totalPages; i++) {
+        const dot = document.createElement('button');
+        dot.className = `
+            h-2 rounded-full transition-all duration-300
+            ${i === 0 ? 'w-8 bg-[#184E83]' : 'w-2 bg-gray-300'}
+        `;
+        dot.addEventListener('click', () => {
+            const targetCard = cards[i * itemsPerPage];
+            targetCard.scrollIntoView({ behavior: 'smooth', inline: 'start' });
+            setActiveDot(i);
+        });
+        dotsContainer.appendChild(dot);
+    }
+
+    const dots = dotsContainer.querySelectorAll('button');
+
+    function setActiveDot(activeIndex) {
+        dots.forEach((dot, i) => {
+            dot.classList.toggle('bg-[#184E83]', i === activeIndex);
+            dot.classList.toggle('bg-gray-300', i !== activeIndex);
+            dot.classList.toggle('w-8', i === activeIndex);
+            dot.classList.toggle('w-2', i !== activeIndex);
+        });
+    }
+
+    carousel.addEventListener('scroll', () => {
+        const cardWidth = cards[0].offsetWidth + 24;
+        const currentPage = Math.round(carousel.scrollLeft / (cardWidth * itemsPerPage));
+        setActiveDot(currentPage);
+    });
+});
+</script>
 
     <!-- Contact Section -->
     <section id="kontak" class="py-20 bg-gray-50">
@@ -281,7 +330,7 @@
                             </div>
                             <div>
                                 <h4 class="font-semibold text-[#184E83] mb-1">Alamat</h4>
-                                <p class="text-gray-600">Jl. Raya Taman Asri No. 123<br>Sidoarjo, Jawa Timur 61234</p>
+                                <p class="text-gray-600">Jl. Lilium Sel. II No.1, Sidomukti, Kraton, Kec. Krian<br>Kabupaten Sidoarjo, Jawa Timur 61262</p>
                             </div>
                         </div>
 
@@ -349,7 +398,7 @@
         <div class="max-w-4xl mx-auto px-6 text-center text-white">
             <h2 class="text-4xl font-bold mb-6">Siap Meraih Prestasi Terbaik?</h2>
             <p class="text-xl mb-8 text-blue-100">Bergabunglah dengan ribuan siswa yang telah sukses bersama kami!</p>
-            <a href="{{ route('register') }}" class="btn-primary inline-block px-12 py-4 text-[#184E83] font-bold rounded-full transition transform text-lg">
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLSenK5uHuv3jRGelG_nRNuO1TOXGkzIC2Z-lz0kdzDZjG2MR1g/viewform?pli=1" target="_blank" class="btn-primary inline-block px-12 py-4 text-[#184E83] font-bold rounded-full transition transform text-lg">
                 Daftar Sekarang Gratis!
             </a>
         </div>

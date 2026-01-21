@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Validation\ValidationException;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -22,32 +21,43 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'email' => ['required', 'email'],
-            'password' => ['required'],
+        $credentials = $request->validate([
+            'email' => 'required|email',
+            'password' => 'required',
         ]);
 
-        if (!Auth::attempt($request->only('email', 'password'), $request->boolean('remember'))) {
-            throw ValidationException::withMessages([
-                'email' => __('auth.failed'),
-            ]);
+        // Check if user exists
+        $user = \App\Models\User::where('email', $credentials['email'])->first();
+
+        if (!$user) {
+            return back()->withErrors([
+                'email' => 'Email tidak ditemukan.',
+            ])->onlyInput('email');
         }
 
-        $request->session()->regenerate();
-
-        // Redirect berdasarkan role
-        $user = Auth::user();
-        
-        if ($user->role === 'tentor') {
-            return redirect()->intended(route('tentor.dashboard'));
-        } elseif ($user->role === 'student') {
-            return redirect()->intended(route('dashboard'));
-        } elseif ($user->role === 'admin') {
-            return redirect()->intended('/admin/dashboard');
+        // Check if user is active
+        if (!$user->is_active) {
+            return back()->withErrors([
+                'email' => 'Akun Anda telah dinonaktifkan. Silakan hubungi administrator.',
+            ])->onlyInput('email');
         }
 
-        // Default fallback
-        return redirect('/');
+        // Attempt login
+        if (Auth::attempt($credentials, $request->filled('remember'))) {
+            $request->session()->regenerate();
+            
+            // Redirect based on role
+            return match(auth()->user()->role) {
+                'admin' => redirect()->intended(route('admin.dashboard')),
+                'tentor' => redirect()->intended(route('tentor.dashboard')),
+                'student' => redirect()->intended(route('dashboard')),
+                default => redirect('/'),
+            };
+        }
+
+        return back()->withErrors([
+            'email' => 'Email atau password salah.',
+        ])->onlyInput('email');
     }
 
     /**
@@ -58,9 +68,14 @@ class AuthenticatedSessionController extends Controller
         Auth::guard('web')->logout();
 
         $request->session()->invalidate();
-
         $request->session()->regenerateToken();
 
-        return redirect('/login');
+        // Clear all cache to prevent back button access
+        $response = redirect('/')->with('status', 'Anda telah berhasil logout.');
+        
+        // Add headers to prevent caching
+        return $response->header('Cache-Control', 'no-cache, no-store, must-revalidate')
+                       ->header('Pragma', 'no-cache')
+                       ->header('Expires', '0');
     }
 }

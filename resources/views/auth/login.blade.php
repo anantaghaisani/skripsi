@@ -112,11 +112,11 @@
                 </button>
             </form>
 
-            <!-- Register Link -->
+            <!-- Register Link - Google Form -->
             <div class="mt-6 text-center">
                 <p class="text-sm text-gray-600">
                     Belum punya akun? 
-                    <a href="{{ route('register') }}" class="text-blue-600 hover:text-blue-800 font-semibold">
+                    <a href="https://docs.google.com/forms/d/e/1FAIpQLSenK5uHuv3jRGelG_nRNuO1TOXGkzIC2Z-lz0kdzDZjG2MR1g/viewform?pli=1" target="_blank" class="text-blue-600 hover:text-blue-800 font-semibold">
                         Daftar sekarang
                     </a>
                 </p>
