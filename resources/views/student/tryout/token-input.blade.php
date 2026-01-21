@@ -12,59 +12,58 @@
 
 @section('content')
 <div class="p-8">
-    <div class="max-w-2xl mx-auto">
-        
-        <!-- Tryout Info Card -->
-        <div class="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl p-8 text-white shadow-lg mb-8">
-            <div class="flex items-center mb-4">
-                <div class="w-14 h-14 bg-white/20 rounded-xl flex items-center justify-center mr-4">
-                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                    </svg>
-                </div>
-                <div>
-                    <h2 class="text-2xl font-bold">{{ $tryout->title }}</h2>
-                    <p class="text-blue-100">{{ $tryout->code }}</p>
-                </div>
+    
+    <!-- Tryout Info Card - Full Width -->
+    <div class="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl p-8 text-white shadow-lg mb-8">
+        <div class="flex items-center mb-4">
+            <div class="w-14 h-14 bg-white/20 rounded-xl flex items-center justify-center mr-4">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
             </div>
-            
-            <div class="grid grid-cols-3 gap-4 mt-6 pt-6 border-t border-white/20">
-                <div>
-                    <p class="text-blue-100 text-sm">Jumlah Soal</p>
-                    <p class="text-2xl font-bold">{{ $tryout->total_questions }}</p>
-                </div>
-                <div>
-                    <p class="text-blue-100 text-sm">Durasi</p>
-                    <p class="text-2xl font-bold">{{ $tryout->duration_minutes }} menit</p>
-                </div>
-                <div>
-                    <p class="text-blue-100 text-sm">Periode</p>
-                    <p class="text-sm font-semibold">{{ $tryout->start_date->format('d M') }} - {{ $tryout->end_date->format('d M Y') }}</p>
-                </div>
+            <div>
+                <h2 class="text-2xl font-bold">{{ $tryout->title }}</h2>
+                <p class="text-blue-100">{{ $tryout->code }}</p>
             </div>
         </div>
-
-        @if($isCompleted)
-            <!-- Already Completed -->
-            <div class="bg-green-50 border border-green-200 rounded-xl p-8 text-center">
-                <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <svg class="w-8 h-8 text-green-600" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                    </svg>
-                </div>
-                <h3 class="text-xl font-bold text-green-900 mb-2">Tryout Sudah Selesai</h3>
-                <p class="text-green-700 mb-6">Anda telah menyelesaikan tryout ini sebelumnya</p>
-                <a href="{{ route('tryout.review', $tryout->id) }}" 
-                   class="inline-flex items-center px-6 py-3 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg transition">
-                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
-                    </svg>
-                    Lihat Review Jawaban
-                </a>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6 pt-6 border-t border-white/20">
+            <div>
+                <p class="text-blue-100 text-sm">Jumlah Soal</p>
+                <p class="text-2xl font-bold">{{ $tryout->total_questions }}</p>
             </div>
-        @else
-            <!-- Token Input Form -->
+            <div>
+                <p class="text-blue-100 text-sm">Durasi</p>
+                <p class="text-2xl font-bold">{{ $tryout->duration_minutes }} menit</p>
+            </div>
+            <div>
+                <p class="text-blue-100 text-sm">Periode</p>
+                <p class="text-sm font-semibold">{{ $tryout->start_date->format('d M') }} - {{ $tryout->end_date->format('d M Y') }}</p>
+            </div>
+        </div>
+    </div>
+
+    @if($isCompleted)
+        <!-- Already Completed - Full Width -->
+        <div class="bg-green-50 border border-green-200 rounded-xl p-8 text-center">
+            <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg class="w-8 h-8 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                </svg>
+            </div>
+            <h3 class="text-xl font-bold text-green-900 mb-2">Tryout Sudah Selesai</h3>
+            <p class="text-green-700 mb-6">Anda telah menyelesaikan tryout ini sebelumnya</p>
+            <a href="{{ route('tryout.review', $tryout->id) }}" 
+               class="inline-flex items-center px-6 py-3 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg transition">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                </svg>
+                Lihat Review Jawaban
+            </a>
+        </div>
+    @else
+        <!-- Token Input Form - Centered in Full Width -->
             <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-8">
                 <div class="text-center mb-8">
                     <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -126,9 +125,9 @@
                     </div>
                 </form>
             </div>
-        @endif
+        </div>
+    @endif
 
-    </div>
 </div>
 
 @push('scripts')
