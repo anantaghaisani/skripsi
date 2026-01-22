@@ -86,40 +86,39 @@ class TryoutController extends Controller
     /**
      * Update the specified tryout
      */
-    public function update(Request $request, $id)
-    {
-        $tryout = Tryout::byCreator(Auth::id())->findOrFail($id);
+public function update(Request $request, $id)
+{
+    $tryout = Tryout::byCreator(Auth::id())->findOrFail($id);
 
-        $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'code' => 'required|string|max:50|unique:tryouts,code,' . $tryout->id,
-            'description' => 'nullable|string',
-            'start_date' => 'required|date',
-            'end_date' => 'required|date|after_or_equal:start_date',
-            'total_questions' => 'required|integer|min:1',
-            'duration_minutes' => 'required|integer|min:1',
-            'is_active' => 'boolean',
-            'classes' => 'required|array|min:1',
-            'classes.*' => 'exists:classes,id',
-        ]);
+    $validated = $request->validate([
+        'title' => 'required|string|max:255',
+        'code' => 'required|string|max:50|unique:tryouts,code,' . $tryout->id,
+        'description' => 'nullable|string',
+        'start_date' => 'required|date',
+        'end_date' => 'required|date|after_or_equal:start_date',
+        'total_questions' => 'required|integer|min:1',
+        'duration_minutes' => 'required|integer|min:1',
+        // 'is_active' => 'nullable|boolean',  ← HAPUS BARIS INI!
+        'classes' => 'required|array|min:1',
+        'classes.*' => 'exists:classes,id',
+    ]);
 
-        $tryout->update([
-            'title' => $validated['title'],
-            'code' => $validated['code'],
-            'description' => $validated['description'],
-            'start_date' => $validated['start_date'],
-            'end_date' => $validated['end_date'],
-            'total_questions' => $validated['total_questions'],
-            'duration_minutes' => $validated['duration_minutes'],
-            'is_active' => $request->has('is_active'),
-        ]);
+    $tryout->update([
+        'title' => $validated['title'],
+        'code' => $validated['code'],
+        'description' => $validated['description'],
+        'start_date' => $validated['start_date'],
+        'end_date' => $validated['end_date'],
+        'total_questions' => $validated['total_questions'],
+        'duration_minutes' => $validated['duration_minutes'],
+        'is_active' => $request->has('is_active') ? 1 : 0,  // ← INI TETAP ADA
+    ]);
 
-        // Sync classes
-        $tryout->classes()->sync($validated['classes']);
+    $tryout->classes()->sync($validated['classes']);
 
-        return redirect()->route('tentor.tryout.index')
-            ->with('success', 'Tryout berhasil diperbarui!');
-    }
+    return redirect()->route('tentor.tryout.index')
+        ->with('success', 'Tryout berhasil diperbarui!');
+}
 
     /**
      * Remove the specified tryout

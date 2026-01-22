@@ -154,11 +154,7 @@ class ModuleController extends Controller
         $module->is_active = !$module->is_active;
         $module->save();
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Status modul berhasil diubah!',
-            'is_active' => $module->is_active
-        ]);
+        return redirect()->back()->with('success', 'Status modul berhasil diubah!');
     }
 
     public function bulkDelete(Request $request)

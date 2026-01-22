@@ -12,7 +12,6 @@
 
 @section('content')
 <div class="p-8">
-    <div class="max-w-4xl mx-auto">
 
         <!-- Form Card -->
         <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-8">
