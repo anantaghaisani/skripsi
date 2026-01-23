@@ -88,8 +88,9 @@ class TryoutController extends Controller
         // Attach classes
         $tryout->classes()->attach($validated['classes']);
 
-        return redirect()->route('admin.tryout.index')
-            ->with('success', 'Tryout berhasil dibuat dengan token: ' . $tryout->token);
+        // REDIRECT KE BULK ADD SOAL
+        return redirect()->route('admin.question.bulk-create', $tryout->id)
+            ->with('success', 'Tryout berhasil dibuat dengan token: ' . $tryout->token . '. Silakan tambahkan soal sekarang.');
     }
 
     /**
@@ -129,7 +130,6 @@ class TryoutController extends Controller
             'end_date' => 'required|date|after_or_equal:start_date',
             'total_questions' => 'required|integer|min:1',
             'duration_minutes' => 'required|integer|min:1',
-            'is_active' => 'boolean',
             'classes' => 'required|array|min:1',
             'classes.*' => 'exists:classes,id',
         ]);
@@ -142,7 +142,7 @@ class TryoutController extends Controller
             'end_date' => $validated['end_date'],
             'total_questions' => $validated['total_questions'],
             'duration_minutes' => $validated['duration_minutes'],
-            'is_active' => $request->has('is_active'),
+            'is_active' => $request->has('is_active') ? 1 : 0,
         ]);
 
         // Sync classes
@@ -180,27 +180,43 @@ class TryoutController extends Controller
      */
     public function monitor($id)
     {
-        $tryout = Tryout::with(['classes', 'users', 'creator'])->findOrFail($id);
+        $tryout = Tryout::with(['classes', 'creator'])->findOrFail($id);
 
-        $completedStudents = $tryout->users()
-            ->wherePivot('status', 'sudah_dikerjakan')
-            ->with('class')
-            ->get();
-
-        $pendingStudents = $tryout->users()
-            ->wherePivot('status', 'belum_dikerjakan')
-            ->with('class')
-            ->get();
+        // ✅ PAKAI METHOD DARI MODEL (SAMA KAYAK TENTOR)
+        $completedStudents = $tryout->getCompletedStudents();
+        $pendingStudents = $tryout->getPendingStudents();
 
         $stats = [
             'total_assigned' => $completedStudents->count() + $pendingStudents->count(),
             'completed' => $completedStudents->count(),
             'pending' => $pendingStudents->count(),
-            'average_score' => $completedStudents->avg('user_tryouts.score') ?? 0,
-            'completion_rate' => $completedStudents->count() > 0 ? 
-                round(($completedStudents->count() / ($completedStudents->count() + $pendingStudents->count())) * 100) : 0,
+            'average_score' => $tryout->getAverageScore(),
+            'completion_rate' => $tryout->getCompletionRate(),
         ];
 
         return view('admin.tryout.monitor', compact('tryout', 'completedStudents', 'pendingStudents', 'stats'));
+    }
+
+    /**
+     * Show individual student result
+     */
+    public function showResult($tryoutId, $studentId)
+    {
+        $tryout = Tryout::with(['questions.answers'])->findOrFail($tryoutId);
+        
+        $student = $tryout->users()
+            ->where('users.id', $studentId)
+            ->wherePivot('status', 'sudah_dikerjakan')
+            ->with('class')
+            ->firstOrFail();
+
+        // Get user answers
+        $userAnswers = \App\Models\UserAnswer::where('user_id', $studentId)
+            ->where('tryout_id', $tryoutId)
+            ->with('answer')
+            ->get()
+            ->keyBy('question_id');
+
+        return view('admin.tryout.result', compact('tryout', 'student', 'userAnswers'));
     }
 }

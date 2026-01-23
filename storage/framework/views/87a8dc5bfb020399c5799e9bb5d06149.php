@@ -1,65 +1,65 @@
-@extends('admin.layouts.app')
 
-@section('title', 'Tambah Soal - Hakuna Matata Course')
 
-@section('breadcrumb')
-    @include('components.admin-breadcrumb', [
+<?php $__env->startSection('title', 'Tambah Soal - Hakuna Matata Course'); ?>
+
+<?php $__env->startSection('breadcrumb'); ?>
+    <?php echo $__env->make('components.admin-breadcrumb', [
         'backUrl' => route('admin.question.index', $tryout->id),
         'previousPage' => 'Kelola Soal',
         'currentPage' => 'Tambah Soal'
-    ])
-@endsection
+    ], array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
+<?php $__env->stopSection(); ?>
 
-@section('content')
+<?php $__env->startSection('content'); ?>
 <div class="p-8">
 
     <!-- Success Message -->
-    @if(session('success'))
+    <?php if(session('success')): ?>
         <div class="bg-green-50 border-l-4 border-green-500 p-4 rounded-lg mb-6">
             <div class="flex">
                 <svg class="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
                 </svg>
-                <p class="text-sm font-medium text-green-800">{{ session('success') }}</p>
+                <p class="text-sm font-medium text-green-800"><?php echo e(session('success')); ?></p>
             </div>
         </div>
-    @endif
+    <?php endif; ?>
 
-    @if(session('error'))
+    <?php if(session('error')): ?>
         <div class="bg-red-50 border-l-4 border-red-500 p-4 rounded-lg mb-6">
             <div class="flex">
                 <svg class="w-5 h-5 text-red-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
                 </svg>
-                <p class="text-sm font-medium text-red-800">{{ session('error') }}</p>
+                <p class="text-sm font-medium text-red-800"><?php echo e(session('error')); ?></p>
             </div>
         </div>
-    @endif
+    <?php endif; ?>
 
     <!-- Tryout Info Card -->
     <div class="bg-gradient-to-r from-red-600 to-red-700 rounded-xl p-6 text-white shadow-lg mb-6">
         <div class="flex items-center justify-between">
             <div>
-                <h2 class="text-2xl font-bold mb-2">{{ $tryout->title }}</h2>
-                <p class="text-red-100 mb-3">Token: <span class="font-mono font-bold">{{ $tryout->token }}</span></p>
+                <h2 class="text-2xl font-bold mb-2"><?php echo e($tryout->title); ?></h2>
+                <p class="text-red-100 mb-3">Token: <span class="font-mono font-bold"><?php echo e($tryout->token); ?></span></p>
                 <div class="flex items-center space-x-4 text-sm">
                     <span class="flex items-center">
                         <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                         </svg>
-                        Target: {{ $tryout->total_questions }} soal
+                        Target: <?php echo e($tryout->total_questions); ?> soal
                     </span>
                     <span class="flex items-center">
                         <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                         </svg>
-                        Tersedia: <span id="current-count">{{ $tryout->getQuestionCount() }}</span> soal
+                        Tersedia: <span id="current-count"><?php echo e($tryout->getQuestionCount()); ?></span> soal
                     </span>
                 </div>
             </div>
             <div class="text-right">
                 <div class="text-sm text-red-100 mb-1">Nomor Mulai</div>
-                <div class="text-3xl font-bold">{{ $startNumber }}</div>
+                <div class="text-3xl font-bold"><?php echo e($startNumber); ?></div>
             </div>
         </div>
     </div>
@@ -83,8 +83,8 @@
             </button>
         </div>
 
-        <form action="{{ route('admin.question.bulk-store', $tryout->id) }}" method="POST" id="bulk-form" enctype="multipart/form-data">
-            @csrf
+        <form action="<?php echo e(route('admin.question.bulk-store', $tryout->id)); ?>" method="POST" id="bulk-form" enctype="multipart/form-data">
+            <?php echo csrf_field(); ?>
 
             <!-- Questions Container -->
             <div id="questions-container" class="space-y-6 mb-6">
@@ -93,7 +93,7 @@
 
             <!-- Submit Buttons -->
             <div class="flex items-center justify-between pt-6 border-t">
-                <a href="{{ route('admin.question.index', $tryout->id) }}" 
+                <a href="<?php echo e(route('admin.question.index', $tryout->id)); ?>" 
                    class="px-6 py-3 border border-gray-300 text-gray-700 font-semibold rounded-lg hover:bg-gray-50 transition">
                     Lewati (Isi Nanti)
                 </a>
@@ -129,13 +129,13 @@
 
 </div>
 
-@push('scripts')
+<?php $__env->startPush('scripts'); ?>
 <script>
 let questionCount = 0;
 let questionIndices = [];
-const startNumber = {{ $startNumber }};
-const targetQuestions = {{ $tryout->total_questions }};
-const currentCount = {{ $tryout->getQuestionCount() }};
+const startNumber = <?php echo e($startNumber); ?>;
+const targetQuestions = <?php echo e($tryout->total_questions); ?>;
+const currentCount = <?php echo e($tryout->getQuestionCount()); ?>;
 const remainingSlots = targetQuestions - currentCount;
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -445,5 +445,6 @@ function checkSlotLimit() {
     }
 }
 </script>
-@endpush
-@endsection
+<?php $__env->stopPush(); ?>
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('admin.layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\Users\fayat\tryout-app\resources\views/admin/question/bulk-create.blade.php ENDPATH**/ ?>

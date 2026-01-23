@@ -105,50 +105,93 @@ class Tryout extends Model
 }
 
     // Get students who completed this tryout
+    // ✅ GANTI METHOD INI
+    // Get students who completed this tryout (WITH PIVOT DATA)
     public function getCompletedStudents()
     {
-        return $this->users()
-            ->wherePivot('status', 'sudah_dikerjakan')
-            ->orderByPivot('finished_at', 'desc')
+        // Get all students from assigned classes
+        $allStudents = User::where('role', 'student')
+            ->whereHas('class', function($query) {
+                $query->whereIn('classes.id', $this->classes->pluck('id'));
+            })
+            ->with('class')
             ->get();
+
+        // Filter only completed students and attach pivot data
+        $completedStudents = collect();
+
+        foreach ($allStudents as $student) {
+            $userTryout = $this->users()
+                ->where('users.id', $student->id)
+                ->wherePivot('status', 'sudah_dikerjakan')
+                ->first();
+
+            if ($userTryout) {
+                // Attach pivot data to student object
+                $student->pivot = $userTryout->pivot;
+                $completedStudents->push($student);
+            }
+        }
+
+        return $completedStudents;
     }
 
+    // ✅ GANTI METHOD INI
     // Get students who haven't done this tryout yet
     public function getPendingStudents()
     {
-        $classIds = $this->classes->pluck('id');
-        $completedUserIds = $this->users()
-            ->wherePivot('status', 'sudah_dikerjakan')
-            ->pluck('users.id');
-        
-        return User::students()
-            ->whereIn('class_id', $classIds)
-            ->whereNotIn('id', $completedUserIds)
+        // Get all students from assigned classes
+        $allStudents = User::where('role', 'student')
+            ->whereHas('class', function($query) {
+                $query->whereIn('classes.id', $this->classes->pluck('id'));
+            })
+            ->with('class')
             ->get();
+
+        // Filter only pending students (not completed)
+        $pendingStudents = collect();
+
+        foreach ($allStudents as $student) {
+            $userTryout = $this->users()
+                ->where('users.id', $student->id)
+                ->wherePivot('status', 'sudah_dikerjakan')
+                ->first();
+
+            if (!$userTryout) {
+                // This student has NOT completed the tryout
+                $pendingStudents->push($student);
+            }
+        }
+
+        return $pendingStudents;
     }
 
+    // ✅ UPDATE METHOD INI JUGA
     // Get average score
     public function getAverageScore()
     {
-        return $this->users()
-            ->wherePivot('status', 'sudah_dikerjakan')
-            ->avg('user_tryouts.score');
+        $completedStudents = $this->getCompletedStudents();
+        
+        if ($completedStudents->isEmpty()) {
+            return 0;
+        }
+
+        return $completedStudents->avg('pivot.score') ?? 0;
     }
 
+    // ✅ UPDATE METHOD INI JUGA
     // Get completion rate
     public function getCompletionRate()
     {
-        $totalStudents = User::students()
-            ->whereIn('class_id', $this->classes->pluck('id'))
-            ->count();
-        
-        if ($totalStudents == 0) return 0;
-        
-        $completedStudents = $this->users()
-            ->wherePivot('status', 'sudah_dikerjakan')
-            ->count();
-        
-        return round(($completedStudents / $totalStudents) * 100, 1);
+        $completed = $this->getCompletedStudents()->count();
+        $pending = $this->getPendingStudents()->count();
+        $total = $completed + $pending;
+
+        if ($total === 0) {
+            return 0;
+        }
+
+        return round(($completed / $total) * 100, 1);
     }
 
     // Check if tryout has questions

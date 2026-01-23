@@ -3,7 +3,7 @@
 @section('title', 'Hasil Tryout - Hakuna Matata Course')
 
 @section('breadcrumb')
-    @include('tentor.components.breadcrumb', [
+    @include('components.admin-breadcrumb', [
         'backUrl' => route('admin.tryout.monitor', $tryout->id),
         'previousPage' => 'Monitor',
         'currentPage' => 'Detail Hasil'
@@ -21,7 +21,7 @@
                     @if($student->photo)
                         <img class="w-16 h-16 rounded-full object-cover" src="{{ asset('storage/' . $student->photo) }}" alt="">
                     @else
-                        <img class="w-16 h-16 rounded-full" src="https://ui-avatars.com/api/?name={{ urlencode($student->name) }}&size=64&background=184E83&color=fff" alt="">
+                        <img class="w-16 h-16 rounded-full" src="https://ui-avatars.com/api/?name={{ urlencode($student->name) }}&size=64&background=DC2626&color=fff" alt="">
                     @endif
                 </div>
                 <div>
@@ -74,67 +74,117 @@
         </div>
     </div>
 
-    <!-- Score Breakdown (Placeholder) -->
+    <!-- Score Breakdown -->
     <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-        <h3 class="text-lg font-bold text-gray-900 mb-4">Rincian Nilai</h3>
+        <h3 class="text-lg font-bold text-gray-900 mb-6">Rincian Nilai</h3>
         
-        <!-- Info: Questions table not yet created -->
-        <div class="bg-blue-50 border border-blue-200 rounded-lg p-6 text-center">
-            <svg class="w-12 h-12 mx-auto text-blue-600 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-            </svg>
-            <h4 class="text-lg font-semibold text-blue-900 mb-2">Fitur Dalam Pengembangan</h4>
-            <p class="text-sm text-blue-700 mb-4">
-                Rincian jawaban per soal akan tersedia setelah tabel questions dan answers dibuat.
-            </p>
-            <div class="text-sm text-blue-600">
-                <p class="mb-1"><strong>Yang akan ditampilkan:</strong></p>
-                <ul class="text-left max-w-md mx-auto">
-                    <li>✓ Jawaban siswa per soal</li>
-                    <li>✓ Kunci jawaban yang benar</li>
-                    <li>✓ Status (benar/salah)</li>
-                    <li>✓ Pembahasan soal</li>
-                </ul>
+        @php
+            $totalQuestions = $tryout->total_questions ?? 0;
+            $score = $student->pivot->score ?? 0;
+            
+            // Calculate correct answers from score (assuming each question worth equal points)
+            // If score is 100 and total questions is 25, then correct = 25
+            $correctAnswers = $totalQuestions > 0 ? round(($score / 100) * $totalQuestions) : 0;
+            
+            // Get answers data from pivot if available, otherwise calculate
+            if (isset($student->pivot->correct_answers)) {
+                $correctAnswers = $student->pivot->correct_answers;
+            }
+            
+            if (isset($student->pivot->wrong_answers)) {
+                $wrongAnswers = $student->pivot->wrong_answers;
+            } else {
+                // Calculate wrong answers
+                $wrongAnswers = $totalQuestions - $correctAnswers;
+            }
+            
+            // Unanswered = total - (correct + wrong)
+            // If all answered, unanswered should be 0
+            $answered = $correctAnswers + $wrongAnswers;
+            $unanswered = $totalQuestions > $answered ? $totalQuestions - $answered : 0;
+        @endphp
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- Benar -->
+            <div class="bg-green-50 rounded-xl p-6 border-2 border-green-200">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="w-12 h-12 bg-green-600 rounded-full flex items-center justify-center">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                    </div>
+                </div>
+                <p class="text-sm font-medium text-green-700 mb-2">Jawaban Benar</p>
+                <div class="flex items-end justify-between">
+                    <p class="text-4xl font-bold text-green-600">{{ $correctAnswers }}</p>
+                    @if($totalQuestions > 0)
+                        <p class="text-sm text-green-600 font-semibold mb-1">
+                            {{ number_format(($correctAnswers / $totalQuestions) * 100, 1) }}%
+                        </p>
+                    @endif
+                </div>
+            </div>
+
+            <!-- Salah -->
+            <div class="bg-red-50 rounded-xl p-6 border-2 border-red-200">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="w-12 h-12 bg-red-600 rounded-full flex items-center justify-center">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </div>
+                </div>
+                <p class="text-sm font-medium text-red-700 mb-2">Jawaban Salah</p>
+                <div class="flex items-end justify-between">
+                    <p class="text-4xl font-bold text-red-600">{{ $wrongAnswers }}</p>
+                    @if($totalQuestions > 0)
+                        <p class="text-sm text-red-600 font-semibold mb-1">
+                            {{ number_format(($wrongAnswers / $totalQuestions) * 100, 1) }}%
+                        </p>
+                    @endif
+                </div>
+            </div>
+
+            <!-- Tidak Dijawab -->
+            <div class="bg-gray-50 rounded-xl p-6 border-2 border-gray-200">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="w-12 h-12 bg-gray-600 rounded-full flex items-center justify-center">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                </div>
+                <p class="text-sm font-medium text-gray-700 mb-2">Tidak Dijawab</p>
+                <div class="flex items-end justify-between">
+                    <p class="text-4xl font-bold text-gray-600">{{ $unanswered }}</p>
+                    @if($totalQuestions > 0)
+                        <p class="text-sm text-gray-600 font-semibold mb-1">
+                            {{ number_format(($unanswered / $totalQuestions) * 100, 1) }}%
+                        </p>
+                    @endif
+                </div>
             </div>
         </div>
 
-        <!-- Temporary Stats -->
-        <div class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div class="bg-green-50 rounded-lg p-4 text-center">
-                <p class="text-sm text-green-700 mb-1">Benar</p>
-                <p class="text-2xl font-bold text-green-600">-</p>
+        <!-- Summary Bar -->
+        @if($totalQuestions > 0)
+        <div class="mt-6 pt-6 border-t border-gray-200">
+            <div class="flex items-center justify-between mb-2">
+                <p class="text-sm font-medium text-gray-700">Progress Pengerjaan</p>
+                <p class="text-sm font-semibold text-gray-900">{{ $correctAnswers + $wrongAnswers }} / {{ $totalQuestions }} soal</p>
             </div>
-            <div class="bg-red-50 rounded-lg p-4 text-center">
-                <p class="text-sm text-red-700 mb-1">Salah</p>
-                <p class="text-2xl font-bold text-red-600">-</p>
-            </div>
-            <div class="bg-gray-50 rounded-lg p-4 text-center">
-                <p class="text-sm text-gray-700 mb-1">Tidak Dijawab</p>
-                <p class="text-2xl font-bold text-gray-600">-</p>
+            <div class="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+                <div class="h-full flex">
+                    @if($correctAnswers > 0)
+                        <div class="bg-green-600" style="width: {{ ($correctAnswers / $totalQuestions) * 100 }}%"></div>
+                    @endif
+                    @if($wrongAnswers > 0)
+                        <div class="bg-red-600" style="width: {{ ($wrongAnswers / $totalQuestions) * 100 }}%"></div>
+                    @endif
+                </div>
             </div>
         </div>
-    </div>
-
-    <!-- Actions -->
-    <div class="flex items-center justify-between bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-        <div>
-            <h3 class="font-semibold text-gray-900 mb-1">Aksi Tambahan</h3>
-            <p class="text-sm text-gray-500">Export atau cetak hasil tryout siswa</p>
-        </div>
-        <div class="flex items-center space-x-3">
-            <button class="inline-flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg transition">
-                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                </svg>
-                Export PDF
-            </button>
-            <button class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition">
-                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path>
-                </svg>
-                Cetak
-            </button>
-        </div>
+        @endif
     </div>
 
 </div>

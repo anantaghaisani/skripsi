@@ -12,10 +12,10 @@ class DashboardController extends Controller
     {
         $user = Auth::user();
         
-        // Get tryouts for student's class that are active and have questions
+        // Get tryouts for student's class that are active and COMPLETE
         $totalTryouts = Tryout::active()
             ->forClass($user->class_id)
-            ->whereHas('questions')
+            ->whereRaw('(SELECT COUNT(*) FROM questions WHERE tryout_id = tryouts.id) >= tryouts.total_questions')
             ->count();
 
         // Get completed tryouts IDs first
@@ -32,10 +32,10 @@ class DashboardController extends Controller
             ->wherePivot('status', 'sudah_dikerjakan')
             ->avg('user_tryouts.score') ?? 0;
 
-        // Get recent tryouts that are NOT completed (limit 3)
+        // Get recent tryouts that are NOT completed (limit 3) - ONLY COMPLETE ONES
         $recentTryouts = Tryout::active()
             ->forClass($user->class_id)
-            ->whereHas('questions')
+            ->whereRaw('(SELECT COUNT(*) FROM questions WHERE tryout_id = tryouts.id) >= tryouts.total_questions')
             ->whereNotIn('id', $completedTryoutIds)
             ->with(['classes', 'questions'])
             ->latest()

@@ -69,22 +69,13 @@
     <!-- Action Buttons -->
     <div class="flex items-center justify-between">
         <h3 class="text-xl font-bold text-gray-900">Daftar Soal</h3>
-        <div class="flex items-center space-x-3">
-            <a href="{{ route('admin.question.bulk-create', $tryout->id) }}" 
-               class="inline-flex items-center px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-lg transition">
-                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                </svg>
-                Tambah Bulk
-            </a>
-            <a href="{{ route('admin.question.create', $tryout->id) }}" 
-               class="inline-flex items-center px-4 py-2 bg-[#DC2626] hover:bg-red-700 text-white font-semibold rounded-lg transition">
-                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-                </svg>
-                Tambah Soal
-            </a>
-        </div>
+        <a href="{{ route('admin.question.bulk-create', $tryout->id) }}" 
+           class="inline-flex items-center px-6 py-3 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg transition shadow-sm">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+            </svg>
+            Tambah Soal
+        </a>
     </div>
 
     <!-- Questions List -->
@@ -95,22 +86,13 @@
             </svg>
             <h3 class="text-lg font-semibold text-gray-900 mb-2">Belum Ada Soal</h3>
             <p class="text-gray-600 mb-6">Mulai tambahkan soal untuk tryout ini</p>
-            <div class="flex items-center justify-center space-x-3">
-                <a href="{{ route('admin.question.create', $tryout->id) }}" 
-                   class="inline-flex items-center px-6 py-3 bg-[#DC2626] hover:bg-red-700 text-white font-semibold rounded-lg transition">
-                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-                    </svg>
-                    Tambah Soal
-                </a>
-                <a href="{{ route('admin.question.bulk-create', $tryout->id) }}" 
-                   class="inline-flex items-center px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-lg transition">
-                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                    </svg>
-                    Tambah Bulk
-                </a>
-            </div>
+            <a href="{{ route('admin.question.bulk-create', $tryout->id) }}" 
+               class="inline-flex items-center px-6 py-3 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg transition">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                </svg>
+                Tambah Soal
+            </a>
         </div>
     @else
         <div class="space-y-4">

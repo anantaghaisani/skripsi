@@ -1,16 +1,16 @@
-@extends('tentor.layouts.app')
 
-@section('title', 'Hasil Tryout - Hakuna Matata Course')
 
-@section('breadcrumb')
-    @include('tentor.components.breadcrumb', [
+<?php $__env->startSection('title', 'Hasil Tryout - Hakuna Matata Course'); ?>
+
+<?php $__env->startSection('breadcrumb'); ?>
+    <?php echo $__env->make('tentor.components.breadcrumb', [
         'backUrl' => route('tentor.tryout.monitor', $tryout->id),
         'previousPage' => 'Monitor',
         'currentPage' => 'Detail Hasil'
-    ])
-@endsection
+    ], array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
+<?php $__env->stopSection(); ?>
 
-@section('content')
+<?php $__env->startSection('content'); ?>
 <div class="p-8 space-y-6">
 
     <!-- Student Info Card -->
@@ -18,29 +18,30 @@
         <div class="flex items-center justify-between">
             <div class="flex items-center space-x-4">
                 <div class="w-16 h-16">
-                    @if($student->photo)
-                        <img class="w-16 h-16 rounded-full object-cover" src="{{ asset('storage/' . $student->photo) }}" alt="">
-                    @else
-                        <img class="w-16 h-16 rounded-full" src="https://ui-avatars.com/api/?name={{ urlencode($student->name) }}&size=64&background=184E83&color=fff" alt="">
-                    @endif
+                    <?php if($student->photo): ?>
+                        <img class="w-16 h-16 rounded-full object-cover" src="<?php echo e(asset('storage/' . $student->photo)); ?>" alt="">
+                    <?php else: ?>
+                        <img class="w-16 h-16 rounded-full" src="https://ui-avatars.com/api/?name=<?php echo e(urlencode($student->name)); ?>&size=64&background=184E83&color=fff" alt="">
+                    <?php endif; ?>
                 </div>
                 <div>
-                    <h2 class="text-xl font-bold text-gray-900">{{ $student->name }}</h2>
-                    <p class="text-sm text-gray-500">{{ $student->email }}</p>
-                    @if($student->class)
+                    <h2 class="text-xl font-bold text-gray-900"><?php echo e($student->name); ?></h2>
+                    <p class="text-sm text-gray-500"><?php echo e($student->email); ?></p>
+                    <?php if($student->class): ?>
                         <span class="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-purple-100 text-purple-800 mt-1">
-                            {{ $student->class->grade_level }} {{ $student->class->class_number }}{{ $student->class->name }}
+                            <?php echo e($student->class->grade_level); ?> <?php echo e($student->class->class_number); ?><?php echo e($student->class->name); ?>
+
                         </span>
-                    @endif
+                    <?php endif; ?>
                 </div>
             </div>
             <div class="text-right">
                 <p class="text-sm text-gray-500 mb-1">Nilai</p>
-                @php
+                <?php
                     $score = $student->pivot->score ?? 0;
                     $formattedScore = $score == floor($score) ? number_format($score, 0) : number_format($score, 1);
-                @endphp
-                <p class="text-4xl font-bold text-green-600">{{ $formattedScore }}</p>
+                ?>
+                <p class="text-4xl font-bold text-green-600"><?php echo e($formattedScore); ?></p>
             </div>
         </div>
     </div>
@@ -51,40 +52,42 @@
         <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div>
                 <p class="text-sm text-gray-500 mb-1">Judul Tryout</p>
-                <p class="font-semibold text-gray-900">{{ $tryout->title }}</p>
+                <p class="font-semibold text-gray-900"><?php echo e($tryout->title); ?></p>
             </div>
             <div>
                 <p class="text-sm text-gray-500 mb-1">Waktu Mulai</p>
                 <p class="font-semibold text-gray-900">
-                    @if($student->pivot->started_at)
-                        {{ \Carbon\Carbon::parse($student->pivot->started_at)->locale('id')->isoFormat('D MMM YYYY, HH:mm') }}
-                    @else
+                    <?php if($student->pivot->started_at): ?>
+                        <?php echo e(\Carbon\Carbon::parse($student->pivot->started_at)->locale('id')->isoFormat('D MMM YYYY, HH:mm')); ?>
+
+                    <?php else: ?>
                         -
-                    @endif
+                    <?php endif; ?>
                 </p>
             </div>
             <div>
                 <p class="text-sm text-gray-500 mb-1">Waktu Selesai</p>
                 <p class="font-semibold text-gray-900">
-                    @if($student->pivot->finished_at)
-                        {{ \Carbon\Carbon::parse($student->pivot->finished_at)->locale('id')->isoFormat('D MMM YYYY, HH:mm') }}
-                    @else
+                    <?php if($student->pivot->finished_at): ?>
+                        <?php echo e(\Carbon\Carbon::parse($student->pivot->finished_at)->locale('id')->isoFormat('D MMM YYYY, HH:mm')); ?>
+
+                    <?php else: ?>
                         -
-                    @endif
+                    <?php endif; ?>
                 </p>
             </div>
             <div>
                 <p class="text-sm text-gray-500 mb-1">Durasi Pengerjaan</p>
                 <p class="font-semibold text-gray-900">
-                    @if($student->pivot->started_at && $student->pivot->finished_at)
-                        @php
+                    <?php if($student->pivot->started_at && $student->pivot->finished_at): ?>
+                        <?php
                             $duration = \Carbon\Carbon::parse($student->pivot->started_at)->diffInMinutes(\Carbon\Carbon::parse($student->pivot->finished_at));
                             $formattedDuration = $duration == floor($duration) ? number_format($duration, 0) : number_format($duration, 1);
-                        @endphp
-                        {{ $formattedDuration }} menit
-                    @else
+                        ?>
+                        <?php echo e($formattedDuration); ?> menit
+                    <?php else: ?>
                         -
-                    @endif
+                    <?php endif; ?>
                 </p>
             </div>
         </div>
@@ -94,7 +97,7 @@
     <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
         <h3 class="text-lg font-bold text-gray-900 mb-6">Rincian Nilai</h3>
         
-        @php
+        <?php
             $totalQuestions = $tryout->total_questions ?? 0;
             $score = $student->pivot->score ?? 0;
             
@@ -118,7 +121,7 @@
             // If all answered, unanswered should be 0
             $answered = $correctAnswers + $wrongAnswers;
             $unanswered = $totalQuestions > $answered ? $totalQuestions - $answered : 0;
-        @endphp
+        ?>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
             <!-- Benar -->
@@ -132,16 +135,16 @@
                 </div>
                 <p class="text-sm font-medium text-green-700 mb-2">Jawaban Benar</p>
                 <div class="flex items-end justify-between">
-                    <p class="text-4xl font-bold text-green-600">{{ $correctAnswers }}</p>
-                    @if($totalQuestions > 0)
-                        @php
+                    <p class="text-4xl font-bold text-green-600"><?php echo e($correctAnswers); ?></p>
+                    <?php if($totalQuestions > 0): ?>
+                        <?php
                             $percentage = ($correctAnswers / $totalQuestions) * 100;
                             $formattedPercentage = $percentage == floor($percentage) ? number_format($percentage, 0) : number_format($percentage, 1);
-                        @endphp
+                        ?>
                         <p class="text-sm text-green-600 font-semibold mb-1">
-                            {{ $formattedPercentage }}%
+                            <?php echo e($formattedPercentage); ?>%
                         </p>
-                    @endif
+                    <?php endif; ?>
                 </div>
             </div>
 
@@ -156,16 +159,16 @@
                 </div>
                 <p class="text-sm font-medium text-red-700 mb-2">Jawaban Salah</p>
                 <div class="flex items-end justify-between">
-                    <p class="text-4xl font-bold text-red-600">{{ $wrongAnswers }}</p>
-                    @if($totalQuestions > 0)
-                        @php
+                    <p class="text-4xl font-bold text-red-600"><?php echo e($wrongAnswers); ?></p>
+                    <?php if($totalQuestions > 0): ?>
+                        <?php
                             $percentage = ($wrongAnswers / $totalQuestions) * 100;
                             $formattedPercentage = $percentage == floor($percentage) ? number_format($percentage, 0) : number_format($percentage, 1);
-                        @endphp
+                        ?>
                         <p class="text-sm text-red-600 font-semibold mb-1">
-                            {{ $formattedPercentage }}%
+                            <?php echo e($formattedPercentage); ?>%
                         </p>
-                    @endif
+                    <?php endif; ?>
                 </div>
             </div>
 
@@ -180,40 +183,41 @@
                 </div>
                 <p class="text-sm font-medium text-gray-700 mb-2">Tidak Dijawab</p>
                 <div class="flex items-end justify-between">
-                    <p class="text-4xl font-bold text-gray-600">{{ $unanswered }}</p>
-                    @if($totalQuestions > 0)
-                        @php
+                    <p class="text-4xl font-bold text-gray-600"><?php echo e($unanswered); ?></p>
+                    <?php if($totalQuestions > 0): ?>
+                        <?php
                             $percentage = ($unanswered / $totalQuestions) * 100;
                             $formattedPercentage = $percentage == floor($percentage) ? number_format($percentage, 0) : number_format($percentage, 1);
-                        @endphp
+                        ?>
                         <p class="text-sm text-gray-600 font-semibold mb-1">
-                            {{ $formattedPercentage }}%
+                            <?php echo e($formattedPercentage); ?>%
                         </p>
-                    @endif
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
 
         <!-- Summary Bar -->
-        @if($totalQuestions > 0)
+        <?php if($totalQuestions > 0): ?>
         <div class="mt-6 pt-6 border-t border-gray-200">
             <div class="flex items-center justify-between mb-2">
                 <p class="text-sm font-medium text-gray-700">Progress Pengerjaan</p>
-                <p class="text-sm font-semibold text-gray-900">{{ $correctAnswers + $wrongAnswers }} / {{ $totalQuestions }} soal</p>
+                <p class="text-sm font-semibold text-gray-900"><?php echo e($correctAnswers + $wrongAnswers); ?> / <?php echo e($totalQuestions); ?> soal</p>
             </div>
             <div class="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
                 <div class="h-full flex">
-                    @if($correctAnswers > 0)
-                        <div class="bg-green-600" style="width: {{ ($correctAnswers / $totalQuestions) * 100 }}%"></div>
-                    @endif
-                    @if($wrongAnswers > 0)
-                        <div class="bg-red-600" style="width: {{ ($wrongAnswers / $totalQuestions) * 100 }}%"></div>
-                    @endif
+                    <?php if($correctAnswers > 0): ?>
+                        <div class="bg-green-600" style="width: <?php echo e(($correctAnswers / $totalQuestions) * 100); ?>%"></div>
+                    <?php endif; ?>
+                    <?php if($wrongAnswers > 0): ?>
+                        <div class="bg-red-600" style="width: <?php echo e(($wrongAnswers / $totalQuestions) * 100); ?>%"></div>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
-        @endif
+        <?php endif; ?>
     </div>
 
 </div>
-@endsection
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('tentor.layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\Users\fayat\tryout-app\resources\views/tentor/tryout/result.blade.php ENDPATH**/ ?>

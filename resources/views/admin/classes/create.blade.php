@@ -28,6 +28,7 @@
                 <select id="grade_level" 
                         name="grade_level" 
                         required
+                        onchange="updateClassNumbers()"
                         class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent">
                     <option value="">Pilih Jenjang</option>
                     <option value="SD" {{ old('grade_level') === 'SD' ? 'selected' : '' }}>SD</option>
@@ -40,21 +41,38 @@
             </div>
 
             <!-- Class Number -->
-            <div class="mb-6">
+            <div class="mb-4">
                 <label for="class_number" class="block text-sm font-medium text-gray-700 mb-2">
-                    Kelas <span class="text-red-600">*</span>
+                    Tingkat Kelas <span class="text-red-600">*</span>
                 </label>
-                <input type="text" 
-                       id="class_number" 
-                       name="class_number" 
-                       value="{{ old('class_number') }}"
-                       placeholder="Contoh: 7A, 10B, 12 IPA 1"
-                       required
-                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent">
+                <select id="class_number" 
+                        name="class_number" 
+                        required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent">
+                    <option value="">Pilih jenjang terlebih dahulu</option>
+                </select>
                 @error('class_number')
                     <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
                 @enderror
-                <p class="text-xs text-gray-500 mt-1">Contoh: 7A untuk SMP 7A, 10B untuk SMA 10B</p>
+                <p class="text-xs text-gray-500 mt-1">Tingkat kelas akan muncul setelah memilih jenjang</p>
+            </div>
+
+            <!-- Class Name -->
+            <div class="mb-6">
+                <label for="name" class="block text-sm font-medium text-gray-700 mb-2">
+                    Nama Kelas <span class="text-red-600">*</span>
+                </label>
+                <input type="text" 
+                       id="name" 
+                       name="name" 
+                       value="{{ old('name') }}"
+                       placeholder="Contoh: A, B, IPA 1"
+                       required
+                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent">
+                @error('name')
+                    <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
+                @enderror
+                <p class="text-xs text-gray-500 mt-1">Masukkan nama kelas (misal: A, B, IPA 1, IPS 2)</p>
             </div>
 
             <!-- Buttons -->
@@ -75,4 +93,53 @@
     </div>
 
 </div>
+
+@push('scripts')
+<script>
+function updateClassNumbers() {
+    const gradeLevel = document.getElementById('grade_level').value;
+    const classNumberSelect = document.getElementById('class_number');
+    
+    // Clear existing options
+    classNumberSelect.innerHTML = '<option value="">Pilih tingkat kelas</option>';
+    
+    let start, end;
+    
+    // Determine range based on grade level
+    if (gradeLevel === 'SD') {
+        start = 1;
+        end = 6;
+    } else if (gradeLevel === 'SMP') {
+        start = 7;
+        end = 9;
+    } else if (gradeLevel === 'SMA') {
+        start = 10;
+        end = 12;
+    } else {
+        return; // No grade level selected
+    }
+    
+    // Add options
+    for (let i = start; i <= end; i++) {
+        const option = document.createElement('option');
+        option.value = i;
+        option.textContent = i;
+        
+        // Keep old value if exists
+        if ('{{ old("class_number") }}' == i && '{{ old("grade_level") }}' === gradeLevel) {
+            option.selected = true;
+        }
+        
+        classNumberSelect.appendChild(option);
+    }
+}
+
+// Run on page load if there's old input
+document.addEventListener('DOMContentLoaded', function() {
+    if (document.getElementById('grade_level').value) {
+        updateClassNumbers();
+    }
+});
+</script>
+@endpush
 @endsection

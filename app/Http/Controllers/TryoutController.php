@@ -15,14 +15,17 @@ class TryoutController extends Controller
     /**
      * Display list of available tryouts for student's class
      */
+    /**
+ * Display list of available tryouts for student's class
+ */
     public function index()
     {
         $user = Auth::user();
         
-        // Get tryouts for student's class that are active and have questions
+        // Only show tryouts that are active AND have COMPLETE questions
         $tryouts = Tryout::active()
             ->forClass($user->class_id)
-            ->whereHas('questions') // Only show tryouts with questions
+            ->whereRaw('(SELECT COUNT(*) FROM questions WHERE tryout_id = tryouts.id) >= tryouts.total_questions')
             ->with(['classes', 'questions'])
             ->latest()
             ->get();

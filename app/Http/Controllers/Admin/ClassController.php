@@ -38,26 +38,28 @@ class ClassController extends Controller
     }
 
     public function store(Request $request)
-    {
-        $validated = $request->validate([
-            'grade_level' => 'required|in:SD,SMP,SMA',
-            'class_number' => [
-                'required',
-                'string',
-                'max:10',
-                Rule::unique('classes')->where(function ($query) use ($request) {
-                    return $query->where('grade_level', $request->grade_level);
-                })
-            ],
-        ], [
-            'class_number.unique' => 'Kelas :input sudah ada untuk jenjang ' . $request->grade_level . '.',
-        ]);
+{
+    $validated = $request->validate([
+        'grade_level' => 'required|in:SD,SMP,SMA',
+        'class_number' => 'required|integer|min:1|max:12',
+        'name' => [
+            'required',
+            'string',
+            'max:10',
+            Rule::unique('classes')->where(function ($query) use ($request) {
+                return $query->where('grade_level', $request->grade_level)
+                            ->where('class_number', $request->class_number);
+            })
+        ],
+    ], [
+        'name.unique' => 'Kelas :input sudah ada untuk ' . $request->grade_level . ' ' . $request->class_number . '.',
+    ]);
 
-        Classes::create($validated);
+    Classes::create($validated);
 
-        return redirect()->route('admin.classes.index')
-            ->with('success', 'Kelas berhasil ditambahkan!');
-    }
+    return redirect()->route('admin.classes.index')
+        ->with('success', 'Kelas berhasil ditambahkan!');
+}
 
     public function show($id)
     {

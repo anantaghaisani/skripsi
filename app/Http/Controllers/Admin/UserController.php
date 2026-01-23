@@ -65,32 +65,32 @@ class UserController extends Controller
      * Store a newly created user.
      */
     public function store(Request $request)
-    {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required|string|min:8|confirmed',
-            'role' => 'required|in:student,tentor,admin',
-            'class_id' => 'nullable|exists:classes,id',
-            'photo' => 'nullable|image|max:2048',
-        ]);
+{
+    $validated = $request->validate([
+        'name' => 'required|string|max:255',
+        'email' => 'required|email|unique:users,email',
+        'password' => 'required|string|min:8', // ← HAPUS |confirmed
+        'role' => 'required|in:student,tentor,admin',
+        'class_id' => 'nullable|exists:classes,id',
+        'photo' => 'nullable|image|max:2048',
+    ]);
 
-        // Handle photo upload
-        if ($request->hasFile('photo')) {
-            $validated['photo'] = $request->file('photo')->store('users', 'public');
-        }
-
-        // Hash password
-        $validated['password'] = Hash::make($validated['password']);
-        
-        // Set default active
-        $validated['is_active'] = true;
-
-        User::create($validated);
-
-        return redirect()->route('admin.users.index')
-            ->with('success', 'User berhasil ditambahkan!');
+    // Handle photo upload
+    if ($request->hasFile('photo')) {
+        $validated['photo'] = $request->file('photo')->store('users', 'public');
     }
+
+    // Hash password
+    $validated['password'] = Hash::make($validated['password']);
+    
+    // Set default active
+    $validated['is_active'] = true;
+
+    User::create($validated);
+
+    return redirect()->route('admin.users.index')
+        ->with('success', 'User berhasil ditambahkan!');
+}
 
     /**
      * Display the specified user.
@@ -118,7 +118,7 @@ class UserController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => ['required', 'email', Rule::unique('users')->ignore($user->id)],
-            'password' => 'nullable|string|min:8|confirmed',
+            'password' => 'nullable|string|min:8|',
             'role' => 'required|in:student,tentor,admin',
             'class_id' => 'nullable|exists:classes,id',
             'photo' => 'nullable|image|max:2048',

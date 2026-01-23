@@ -1,24 +1,24 @@
-@extends('admin.layouts.app')
 
-@section('title', 'Buat Tryout Baru - Hakuna Matata Course')
 
-@section('breadcrumb')
-    @include('components.admin-breadcrumb', [
+<?php $__env->startSection('title', 'Buat Tryout Baru - Hakuna Matata Course'); ?>
+
+<?php $__env->startSection('breadcrumb'); ?>
+    <?php echo $__env->make('components.admin-breadcrumb', [
         'backUrl' => route('admin.tryout.index'),
         'previousPage' => 'Daftar Tryout',
         'currentPage' => 'Buat Tryout Baru'
-    ])
-@endsection
+    ], array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
+<?php $__env->stopSection(); ?>
 
-@section('content')
+<?php $__env->startSection('content'); ?>
 <div class="p-8">
 
         <!-- Form Card -->
         <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-8">
             <h2 class="text-2xl font-bold text-gray-900 mb-6">Form Tryout Baru</h2>
 
-            <form action="{{ route('admin.tryout.store') }}" method="POST" class="space-y-6">
-                @csrf
+            <form action="<?php echo e(route('admin.tryout.store')); ?>" method="POST" class="space-y-6">
+                <?php echo csrf_field(); ?>
 
                 <!-- Title -->
                 <div>
@@ -28,13 +28,20 @@
                     <input type="text" 
                            id="title" 
                            name="title" 
-                           value="{{ old('title') }}"
+                           value="<?php echo e(old('title')); ?>"
                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
                            placeholder="Contoh: TRYOUT UTBK 2026 #01 - SNBT"
                            required>
-                    @error('title')
-                        <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
-                    @enderror
+                    <?php $__errorArgs = ['title'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                        <p class="text-sm text-red-600 mt-1"><?php echo e($message); ?></p>
+                    <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                 </div>
 
                 <!-- Code -->
@@ -45,13 +52,20 @@
                     <input type="text" 
                            id="code" 
                            name="code" 
-                           value="{{ old('code') }}"
+                           value="<?php echo e(old('code')); ?>"
                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
                            placeholder="Contoh: UTBK2026-01"
                            required>
-                    @error('code')
-                        <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
-                    @enderror
+                    <?php $__errorArgs = ['code'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                        <p class="text-sm text-red-600 mt-1"><?php echo e($message); ?></p>
+                    <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                     <p class="text-xs text-gray-500 mt-1">Kode unik untuk identifikasi tryout</p>
                 </div>
 
@@ -64,10 +78,17 @@
                               name="description" 
                               rows="3"
                               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
-                              placeholder="Deskripsi singkat tentang tryout ini">{{ old('description') }}</textarea>
-                    @error('description')
-                        <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
-                    @enderror
+                              placeholder="Deskripsi singkat tentang tryout ini"><?php echo e(old('description')); ?></textarea>
+                    <?php $__errorArgs = ['description'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                        <p class="text-sm text-red-600 mt-1"><?php echo e($message); ?></p>
+                    <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                 </div>
 
                 <!-- Date Range -->
@@ -79,12 +100,19 @@
                         <input type="date" 
                                id="start_date" 
                                name="start_date" 
-                               value="{{ old('start_date') }}"
+                               value="<?php echo e(old('start_date')); ?>"
                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
                                required>
-                        @error('start_date')
-                            <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
-                        @enderror
+                        <?php $__errorArgs = ['start_date'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                            <p class="text-sm text-red-600 mt-1"><?php echo e($message); ?></p>
+                        <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                     </div>
 
                     <div>
@@ -94,12 +122,19 @@
                         <input type="date" 
                                id="end_date" 
                                name="end_date" 
-                               value="{{ old('end_date') }}"
+                               value="<?php echo e(old('end_date')); ?>"
                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
                                required>
-                        @error('end_date')
-                            <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
-                        @enderror
+                        <?php $__errorArgs = ['end_date'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                            <p class="text-sm text-red-600 mt-1"><?php echo e($message); ?></p>
+                        <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                     </div>
                 </div>
 
@@ -112,13 +147,20 @@
                         <input type="number" 
                                id="total_questions" 
                                name="total_questions" 
-                               value="{{ old('total_questions', 50) }}"
+                               value="<?php echo e(old('total_questions', 50)); ?>"
                                min="1"
                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
                                required>
-                        @error('total_questions')
-                            <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
-                        @enderror
+                        <?php $__errorArgs = ['total_questions'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                            <p class="text-sm text-red-600 mt-1"><?php echo e($message); ?></p>
+                        <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                     </div>
 
                     <div>
@@ -128,13 +170,20 @@
                         <input type="number" 
                                id="duration_minutes" 
                                name="duration_minutes" 
-                               value="{{ old('duration_minutes', 120) }}"
+                               value="<?php echo e(old('duration_minutes', 120)); ?>"
                                min="1"
                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
                                required>
-                        @error('duration_minutes')
-                            <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
-                        @enderror
+                        <?php $__errorArgs = ['duration_minutes'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                            <p class="text-sm text-red-600 mt-1"><?php echo e($message); ?></p>
+                        <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                     </div>
                 </div>
 
@@ -146,34 +195,43 @@
                     <p class="text-xs text-gray-500 mb-3">Pilih satu atau lebih kelas yang bisa mengakses tryout ini</p>
                     
                     <div class="border border-gray-300 rounded-lg p-4 max-h-64 overflow-y-auto bg-gray-50">
-                        @php
+                        <?php
                             $groupedClasses = $classes->groupBy('grade_level');
-                        @endphp
+                        ?>
                         
-                        @foreach($groupedClasses as $gradeLevel => $classList)
+                        <?php $__currentLoopData = $groupedClasses; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $gradeLevel => $classList): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                             <div class="mb-4">
-                                <h4 class="font-semibold text-gray-900 mb-2 text-sm">{{ $gradeLevel }}</h4>
+                                <h4 class="font-semibold text-gray-900 mb-2 text-sm"><?php echo e($gradeLevel); ?></h4>
                                 <div class="grid grid-cols-2 md:grid-cols-3 gap-2">
-                                    @foreach($classList as $class)
+                                    <?php $__currentLoopData = $classList; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $class): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                         <label class="flex items-center p-3 bg-white border border-gray-200 rounded-lg hover:bg-red-50 cursor-pointer transition">
                                             <input type="checkbox" 
                                                    name="classes[]" 
-                                                   value="{{ $class->id }}"
-                                                   {{ in_array($class->id, old('classes', [])) ? 'checked' : '' }}
+                                                   value="<?php echo e($class->id); ?>"
+                                                   <?php echo e(in_array($class->id, old('classes', [])) ? 'checked' : ''); ?>
+
                                                    class="w-4 h-4 text-red-600 border-gray-300 rounded focus:ring-red-500">
                                             <span class="ml-2 text-sm text-gray-900">
-                                                {{ $class->grade_level }} {{ $class->class_number }}{{ $class->name }}
+                                                <?php echo e($class->grade_level); ?> <?php echo e($class->class_number); ?><?php echo e($class->name); ?>
+
                                             </span>
                                         </label>
-                                    @endforeach
+                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                 </div>
                             </div>
-                        @endforeach
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                     </div>
                     
-                    @error('classes')
-                        <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
-                    @enderror
+                    <?php $__errorArgs = ['classes'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                        <p class="text-sm text-red-600 mt-1"><?php echo e($message); ?></p>
+                    <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                 </div>
 
                 <!-- Info Box -->
@@ -193,7 +251,7 @@
 
                 <!-- Submit Buttons -->
                 <div class="flex items-center justify-end space-x-4 pt-6 border-t">
-                    <a href="{{ route('admin.tryout.index') }}" 
+                    <a href="<?php echo e(route('admin.tryout.index')); ?>" 
                        class="px-6 py-3 border border-gray-300 text-gray-700 font-semibold rounded-lg hover:bg-gray-50 transition">
                         Batal
                     </a>
@@ -207,4 +265,5 @@
     </div>
 
 </div>
-@endsection
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('admin.layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\Users\fayat\tryout-app\resources\views/admin/tryout/create.blade.php ENDPATH**/ ?>
