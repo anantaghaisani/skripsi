@@ -117,7 +117,13 @@
                                 <div class="flex items-center justify-between">
                                     <div>
                                         <p class="text-sm text-blue-600 font-medium">Total Tryout</p>
-                                        <p class="text-2xl font-bold text-blue-900 mt-1"><?php echo e($user->tryouts()->count()); ?></p>
+                                        <?php
+                                            // Get all available tryouts for this student's class
+                                            $availableTryouts = \App\Models\Tryout::whereHas('classes', function($query) use ($user) {
+                                                $query->where('classes.id', $user->class_id);
+                                            })->count();
+                                        ?>
+                                        <p class="text-2xl font-bold text-blue-900 mt-1"><?php echo e($availableTryouts); ?></p>
                                     </div>
                                     <div class="w-12 h-12 bg-blue-200 rounded-lg flex items-center justify-center">
                                         <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -148,7 +154,7 @@
                     <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
                         <h3 class="text-lg font-bold text-gray-900 mb-4">📝 Tryout Terbaru</h3>
                         
-                        <?php $__empty_1 = true; $__currentLoopData = $user->tryouts()->latest()->take(5)->get(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $tryout): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
+                        <?php $__empty_1 = true; $__currentLoopData = $user->tryouts()->latest()->take(3)->get(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $tryout): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                             <div class="flex items-center justify-between p-3 border-b last:border-b-0 hover:bg-gray-50 transition">
                                 <div class="flex-1">
                                     <p class="font-semibold text-gray-900"><?php echo e($tryout->title); ?></p>

@@ -114,7 +114,13 @@
                                 <div class="flex items-center justify-between">
                                     <div>
                                         <p class="text-sm text-blue-600 font-medium">Total Tryout</p>
-                                        <p class="text-2xl font-bold text-blue-900 mt-1">{{ $user->tryouts()->count() }}</p>
+                                        @php
+                                            // Get all available tryouts for this student's class
+                                            $availableTryouts = \App\Models\Tryout::whereHas('classes', function($query) use ($user) {
+                                                $query->where('classes.id', $user->class_id);
+                                            })->count();
+                                        @endphp
+                                        <p class="text-2xl font-bold text-blue-900 mt-1">{{ $availableTryouts }}</p>
                                     </div>
                                     <div class="w-12 h-12 bg-blue-200 rounded-lg flex items-center justify-center">
                                         <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -145,7 +151,7 @@
                     <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
                         <h3 class="text-lg font-bold text-gray-900 mb-4">📝 Tryout Terbaru</h3>
                         
-                        @forelse($user->tryouts()->latest()->take(5)->get() as $tryout)
+                        @forelse($user->tryouts()->latest()->take(3)->get() as $tryout)
                             <div class="flex items-center justify-between p-3 border-b last:border-b-0 hover:bg-gray-50 transition">
                                 <div class="flex-1">
                                     <p class="font-semibold text-gray-900">{{ $tryout->title }}</p>
