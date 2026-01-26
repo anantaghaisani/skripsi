@@ -129,7 +129,7 @@
                                 <div class="flex items-center justify-between">
                                     <div>
                                         <p class="text-sm text-green-600 font-medium">Selesai</p>
-                                        <p class="text-2xl font-bold text-green-900 mt-1">{{ $user->tryouts()->wherePivot('status', 'completed')->count() }}</p>
+                                        <p class="text-2xl font-bold text-green-900 mt-1">{{ $user->tryouts()->wherePivot('status', 'sudah_dikerjakan')->count() }}</p>
                                     </div>
                                     <div class="w-12 h-12 bg-green-200 rounded-lg flex items-center justify-center">
                                         <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -158,7 +158,7 @@
                                     </p>
                                 </div>
                                 <div class="text-right">
-                                    @if($tryout->pivot->status === 'completed')
+                                    @if($tryout->pivot->status === 'sudah_dikerjakan')
                                         @php
                                             $score = $tryout->pivot->score ?? 0;
                                             $formattedScore = $score == floor($score) ? number_format($score, 0) : number_format($score, 1);
@@ -168,7 +168,7 @@
                                         </span>
                                     @else
                                         <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
-                                            In Progress
+                                            Belum Selesai
                                         </span>
                                     @endif
                                 </div>
